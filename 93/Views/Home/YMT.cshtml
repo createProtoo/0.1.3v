@@ -1,0 +1,57 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>YMT C# Demo</title>
+    <link href="~/Content/App/ymt.css" rel="stylesheet" />
+</head>
+
+<body>
+    <form id='form_submit' name='form_submit' action='/Home/YMT' method='POST'>
+        WebUrl: <input type='text' name='WebUrl' value='http://ymt.zy130.com/pay' />
+        PosUid:<input type='text' name='PosUid' value='YMT200003' />
+        key:<input type='text' name='key' value='17a6f977969c066d2ebbafbe133d4452' />
+        OrderMoney:<input type='text' name='OrderMoney' value='500.00' />
+
+        OrderNo:<input type='text' name='OrderNo' value='P01201911011603260460004' />
+        OrderName:<input type='text' name='OrderName' value='P01201911011603260460004' />
+        OrderType: <input type='text' name='OrderType' value='alipay' />
+        <input type="checkbox" name="PostMthod" value="1" checked="checked" />是否POST请求
+
+        <input type='submit' value='提交吧' />
+
+
+    </form>
+    @*<script>document.forms['form_submit'].submit();</script>"}*@
+
+
+
+    <hr />
+    <a href="alipays://platformapi/startapp?appId=20000691&url=http://chat.haobijia.com:8080/home/pid?u=2088102442957769%26a%3D777">h5 Hook测试</a>
+
+
+
+
+
+    <hr />
+    <a href="alipays://platformapi/startapp?appId=20000691&url=http://chat.haobijia.com:8080/home/pid?u=2088102442957769%26a%3D777">h5一次金额OK</a>
+
+    <hr />
+    @*<a href="alipays://platformapi/startapp?appId=20000691&url=http://ymt.zy130.com/index/pid?u=2088102442957769%26a%3D777">h5一次金额cc</a>*@
+    <p>----------------------------</p>
+    <a href="chsp://qr.95516.com/00010000/01213073213760076759358310023712">h5拉起云闪付</a>
+    <p>----------------------------</p>
+    <a style="padding-top:20px;color:blue" href="chsp://qr.95516.com/qrcGtwWeb-web/api/userAuth?version=1.0.0&redirectUrl=http://11.runtai369.com/home/ymturl">*****h5拉起云闪付2苹果****</a>
+    <p>----------------------------</p>
+    <a style="padding-top:20px;color:red" href="https://ds.alipay.com/?from=mobilecodec&scheme=alipays%3A%2F%2Fplatformapi%2Fstartapp%3FsaId%3D10000007%26clientVersion%3D3.7.0.0718%26qrcode%3Dhttps%3A%2F%2Fqr.alipay.com/fkx077515ilxblhsl5ozybb">*****h5拉起支付宝****</a>
+    <p>----------------------------</p>
+    <a style="padding-top:20px;color:blue" href="taobao://www.alipay.com/?appId=10000007&qrcode=https://qr.alipay.com/fkx08460z3rdfsjiyv9p9bb">*****h5拉起淘宝****</a>
+    <p>----------------------------</p>
+</body>
+</html>

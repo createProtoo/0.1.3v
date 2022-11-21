@@ -1,0 +1,41 @@
+﻿<style>
+    label {
+        margin-top: 20px;
+    }
+    mySign{
+        margin-left:16px;
+    }
+</style>
+<form id='form_submit' name='form_submit' action='../../pay2020' target="_blank" method='POST'>
+    <label style="display:block">商户UID</label>
+    <input id="PosUid" class="form-control" type='text' name='PosUid' value='请填写你的商户号' />
+    <label style="display:block">通道类型(wechat alipay unionpay 请勿输错)</label>
+    <input id="OrderType" class="form-control" type='text' name='OrderType' value='unionpay' />
+    <label style="display:block">支付金额(请务必带小数点后两位 .00)</label>
+    <input id="OrderMoney" class="form-control" type='text' name='OrderMoney' value='100.00' />
+    <label style="display:block">支付签名(可自行填写,也可以点击后面自动获取)&emsp;&emsp;<a id="mySign" href="javascript:{mySign();}">获取签名</a></label>
+    <input id="Sign" class="form-control" type='text' name='Sign' value='02f22811e1bd8577df4d06c055129c63' />
+
+
+    <label style="display:block">外部订单号</label>
+    <input id="OrderNo" class="form-control" type='text' name='OrderNo' value='56708618201912151513234641001' />
+    <label style="display:block">备注</label>
+    <input id="OrderName" class="form-control" type='text' name='OrderName' value='802' />
+
+
+    <label style="display:block">盘口回调地址</label>
+    <input id="OrderNo" class="form-control" type='text' name='OrderNotify' value='http://192.168.0.104:7070/callback' />
+    <input class="form-control" type='submit' value='POST' style='display:none;'>
+</form>
+    <a  class="btn btn-primary"  style="margin-top:60px" href="javascript:{myPost();}">开始提交</a>
+
+
+<script>
+    function myPost() {
+        document.forms['form_submit'].submit();
+    }
+    function mySign() {
+
+    }
+
+</script>

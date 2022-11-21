@@ -1,0 +1,31 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Didi</title>
+</head>
+<body>
+    @{ 
+        if(ViewBag.ExpDays<4)
+        {
+            <script>
+                alert('尊敬的阁下，您的服务器过期时间已经不足' + @ViewBag.ExpDays+ ' 天，请及时续费！到期后服务器自动删除，不可恢复，请悉知。')
+            </script>
+        }
+
+    }
+    <div>
+        <p style="color:red">服务器过期时间：@ViewBag.Exp</p>
+        本次密码：
+        <p>@ViewBag.Pwd</p>
+        <p>3分钟过期  最大登录人数 @ViewBag.Max 人</p>
+        <p>已经登录人数 @ViewBag.OK 人</p>
+    </div>
+</body>
+</html>

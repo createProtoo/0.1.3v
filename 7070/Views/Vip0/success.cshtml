@@ -1,0 +1,116 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="og:title" content="邀请注册">
+    <title>注册</title>
+    <link rel="stylesheet" href="~/reg_files/reset.css">
+    <link rel="stylesheet" href="~/reg_files/layui.css">
+    <link rel="stylesheet" href="~/reg_files/index.css">
+    <link rel="stylesheet" href="~/reg_files/reg.css">
+    <script src="~/reg_files/config.js"></script>
+    <LINK href="~/vip_files/style.css"
+          rel="stylesheet" type="text/css">
+    <SCRIPT src="~/vip_files/jquery-2.2.0.min.js" type="text/javascript"></SCRIPT>
+    <SCRIPT src="~/vip_files/sha1.js" type="text/javascript"></SCRIPT>
+
+    <SCRIPT src="~/vip_files/common.js" type="text/javascript"></SCRIPT>
+    <script>
+        (function (para) {
+            if (typeof (window['sensorsDataAnalytic201505']) !== 'undefined') {
+                return false;
+            }
+            window['sensorsDataAnalytic201505'] = para.name;
+            window[para.name] = {
+                para: para
+            };
+        })({
+            name: 'sensors',
+            server_url: SA,
+            heatmap_url: '/static/libs/sensors/heatmap.min.js',
+            heatmap: {
+                //是否开启点击图，默认 default 表示开启，自动采集 $WebClick 事件，可以设置 'not_collect' 表示关闭
+                //需要 JSSDK 版本号大于 1.7
+                clickmap: 'default',
+                //是否开启触达注意力图，默认 default 表示开启，自动采集 $WebStay 事件，可以设置 'not_collect' 表示关闭
+                //需要 JSSDK 版本号大于 1.9.1
+                scroll_notice_map: 'not_collect'
+            }
+        });</script>
+    <script src="~/reg_files/sensorsdata.min.js"></script>
+    <script>
+        sensors.quick('autoTrack');
+        sensors.track('h5_merchant_register_enter', {
+            register_url: location.href
+        })</script>
+    <link id="layuicss-layer" rel="stylesheet" href="~/reg_files/layer.css" media="all">
+    <style id="tsbrowser_video_independent_player_style" type="text/css">
+        [tsbrowser_force_max_size] {
+            width: 100% !important;
+            height: 100% !important;
+            left: 0px !important;
+            top: 0px !important;
+            margin: 0px !important;
+            padding: 0px !important;
+        }
+
+        [tsbrowser_force_fixed] {
+            position: fixed !important;
+            z-index: 9999 !important;
+            background: black !important;
+        }
+
+        [tsbrowser_force_hidden] {
+            opacity: 0 !important;
+            z-index: 0 !important;
+        }
+
+        [tsbrowser_hide_scrollbar] {
+            overflow: hidden !important;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="~/reg_files/bg.jpg" alt="" class="bg-img">
+    <div class="main-div">
+        <div class="form-div">
+            <div class="header">
+                立即注册
+            </div>
+            <div class="form">
+                <div class="step2-div" style="text-align: center;display: block;">
+                    <img src="~/reg_files/success.png" style="zoom: .5; margin-top: 2em" alt="">
+                    <h2 class="h2" style="font-size:16px; margin: 1em 0;">恭喜您，注册成功</h2>
+                    <a href="/demo/ok.apk" class="layui-btn layui-btn-download"><img src="~/reg_files/zs.png" alt="">下载APP</a>
+
+                </div>
+                <div class="step3-div" style="text-align: center; display: none;">
+                    <img src="~/reg_files/fail.png" style="zoom: .5; margin-top: 2em" alt="">
+                    <h2 class="h2" style="font-size:16px; margin: 1em 0;">邀请注册失效</h2>
+                </div>
+                <div class="step4-div" style="text-align: center; display: none;">
+                    <img src="~/reg_files/closed.png" style="zoom: .5; margin-top: 2em" alt="">
+                    <h2 class="h2" style="font-size:16px; margin: 1em 0;">当前未开放注册</h2>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    <div class="iswxchat" style="display: none; ">
+        <img src="~/reg_files/down-zy.png" alt="">
+    </div>
+
+    
+
+</body>
+</html>

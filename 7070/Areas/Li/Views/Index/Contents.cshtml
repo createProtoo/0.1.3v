@@ -1,0 +1,123 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Freinds</title>
+    <script src="~/Areas/help/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script src="~/Areas/help/assets/js/core/jquery.3.2.1.min.js"></script>
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="~/Areas/help/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Areas/help/assets/css/azzara.min.css">
+    <link href="~/Areas/Help/assets/js/plugin/datepicker/jquery.datetimepicker.css" rel="stylesheet" />
+    <link href="~/Scripts/xtiper/css/xtiper.css" rel="stylesheet" />
+    <script src="~/Areas/Li/assets/js/mm/excel.js"></script>
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="~/Areas/help/assets/css/demo.css">
+</head>
+<body>
+    <div>
+        <div style="text-align:center">
+            <h1 style="color:red">一键群发系统</h1>
+            <p style="margin:10px 10px">
+
+                <a style="color:green;width:50px" href="javascript:if(confirm('确实要群发吗?注意，一旦发送无法撤回！')){alert('取消发送....')}">开始发送</a>
+            </p>
+        </div>
+        <button id="ExcelForOrders" class="btn btn-danger">
+            <span class="btn-label">
+                <i class="fa fa-heart"></i>
+            </span>
+            Excel
+        </button>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" style="width:105%;margin-left:-3%">
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="shop-datatables" class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+
+                                        <th>姓名</th>
+                                        <th>号码</th>
+
+
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var whichOderCmd = '@ViewBag.ID';
+
+</script>
+<!--   Core JS Files   -->
+<script src="~/Areas/help/assets/js/core/popper.min.js"></script>
+<script src="~/Areas/help/assets/js/core/bootstrap.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="~/Areas/help/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+<script src="~/Areas/help/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+
+<!-- jQuery Scrollbar -->
+<script src="~/Areas/help/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+<!-- Moment JS -->
+<script src="~/Areas/help/assets/js/plugin/moment/moment.min.js"></script>
+
+<!-- Chart JS -->
+<script src="~/Areas/help/assets/js/plugin/chart.js/chart.min.js"></script>
+
+<!-- jQuery Sparkline -->
+<script src="~/Areas/help/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+<!-- Chart Circle -->
+<script src="~/Areas/help/assets/js/plugin/chart-circle/circles.min.js"></script>
+
+<!-- Datatables -->
+<script src="~/Areas/help/assets/js/plugin/datatables/datatables.min.js"></script>
+
+<!-- Bootstrap Notify -->
+<script src="~/Areas/help/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+<!-- Bootstrap Toggle -->
+<script src="~/Areas/help/assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+
+
+
+<script src="~/Scripts/xtiper/js/xtiper.min.js"></script>
+
+<script src="~/Areas/Li/assets/js/mm/freinds.js"></script>
+<script>
+    WebFont.load({
+        google: { "families": ["Open+Sans:300,400,600,700"] },
+        custom: { "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands"], urls: ['/Areas/help/assets/css/fonts.css'] },
+        active: function () {
+            sessionStorage.fonts = true;
+        }
+    });
+
+
+</script>

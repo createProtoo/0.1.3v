@@ -1,0 +1,115 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<!-- 标准的 lang 属性写法 -->
+<head>
+    <!-- 声明文档使用的字符编码 -->
+    <meta charset="utf-8">
+    <meta content="pc,mobile" name="applicable-device" />
+    <!-- 为移动设备添加 viewport -->
+    <meta content="width=device-width,height=device-height,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <!-- 防止点击输入框，页面自动放大 -->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!-- 页面描述 -->
+    <meta content="在线扫码支付" name="description" />
+    <!-- 页面关键词 -->
+    <meta content="" name="keywords" />
+    <!-- 网页作者 -->
+    <meta content="name, 1699com.com@gmail.com" name="author" />
+    <!-- 搜索引擎抓取 -->
+    <meta content="index,follow" name="robots" />
+    <!-- iOS 设备 begin -->
+    <meta content="标题" name="apple-mobile-web-app-title">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL" name="apple-itunes-app">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta content="telphone=no, email=no" name="format-detection" />
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta content="webkit" name="renderer">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta content="true" name="HandheldFriendly">
+    <!-- 微软的老式浏览器 -->
+    <meta content="320" name="MobileOptimized">
+    <!-- uc强制竖屏 -->
+    <meta content="portrait" name="screen-orientation">
+    <!-- QQ强制竖屏 -->
+    <meta content="portrait" name="x5-orientation">
+    <!-- UC强制全屏 -->
+    <meta content="yes" name="full-screen">
+    <!-- QQ强制全屏 -->
+    <meta content="true" name="x5-fullscreen">
+    <!-- UC应用模式 -->
+    <meta content="application" name="browsermode">
+    <!-- QQ应用模式 -->
+    <meta content="app" name="x5-page-mode">
+    <!-- windows phone 点击无高光 -->
+    <meta content="no" name="msapplication-tap-highlight">
+    <!-- 设置页面不缓存 -->
+    <meta content="no-cache" http-equiv="pragma">
+    <!-- 优先使用 IE 最新版本和 Chrome -->
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+    <!-- 避免IE使用兼容模式 -->
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <!-- 不让百度转码 -->
+    <meta content="no-transform" http-equiv="Cache-Control" />
+
+    <meta content="no-siteapp" http-equiv="Cache-Control" />
+
+    <meta content="no-cache" http-equiv="cache-control">
+
+    <meta content="0" http-equiv="expires">
+    <title></title>
+</head>
+<body>
+</body>
+<script>
+    function returnApp() {
+        AlipayJSBridge.call("exitApp")
+    }
+
+    function ready(a) {
+        window.AlipayJSBridge ? a && a() : document.addEventListener("AlipayJSBridgeReady", a, !1)
+    }
+
+    ready(function () {
+        try {
+            function getParm(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return decodeURIComponent(r[2]);
+                return null;
+            }
+
+            var a = {
+                actionType: "scan",
+                u: getParm('u'),
+                a: getParm('a'),
+                m: "",
+                biz_data: {
+                    s: "money",
+                    u: getParm('u'),
+                    a: getParm('a'),
+                    m: ""
+                }
+            }
+        } catch (b) {
+            returnApp()
+        }
+        AlipayJSBridge.call("startApp", {
+            appId: "20000123",
+            param: a
+        }, function (a) {
+        })
+    });
+    document.addEventListener("resume", function (a) {
+        returnApp()
+    });
+</script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js"></script>
+</html>

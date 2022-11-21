@@ -1,0 +1,258 @@
+﻿
+
+
+@{
+    Layout = null;
+    @model WebApplicationRun.Models.WebApiModel
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @*<script type="text/javascript" src="https://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>*@
+
+    <script src="~/Scripts/App/jquery.min.js"></script>
+
+</head>
+<body>
+    <div>
+
+
+        @{
+
+            if (ViewBag.WhichUrl == 2)
+            {
+                List<string> okList = ViewBag.PostList;
+                string aimUrl = ViewBag.RunPayUrl;
+
+
+                <form id='form_submit' name='form_submit' action='@aimUrl' method='POST'>
+                    @foreach (var item in okList)
+                    {
+                        @Html.Raw(" <input type='hidden' name='" + item + " />");
+                    }
+
+                    <input type='submit' value='POST' style='display:none;'>
+                </form>
+            }
+
+
+
+
+
+        }
+
+
+
+
+
+    </div>
+</body>
+</html>
+
+
+@{
+    if (ViewBag.WhichUrl == 3)
+    {
+
+        string aimUrl = ViewBag.RunPayUrl;
+
+        <script>
+
+              function is_weixin() {
+
+            var ua = navigator.userAgent.toLowerCase();
+
+            if (ua.match(/MicroMessenger/i) == "micromessenger") {
+
+                return true;
+
+            } else {
+
+                return false;
+
+            }
+
+        }
+
+
+            if (!is_weixin()) {
+                   window.location.replace('@aimUrl');
+            }
+
+        </script>
+
+
+
+    }
+}
+
+
+
+
+
+<script>
+     // 判断是否是微信浏览器-begin
+
+        function is_weixin() {
+
+            var ua = navigator.userAgent.toLowerCase();
+
+            if (ua.match(/MicroMessenger/i) == "micromessenger") {
+
+                return true;
+
+            } else {
+
+                return false;
+
+            }
+
+        }
+
+        var winHeight = typeof window.innerHeight != 'undefined' ? window.innerHeight : document.documentElement.clientHeight;
+
+        function loadHtml() {
+
+            var div = document.createElement('div');
+
+            div.id = 'weixin-tip';
+
+            div.innerHTML = '<p><img class="weixin_tip_img"  src="/images/live_weixin.png" alt="微信打开"/></p>';
+
+            document.body.appendChild(div);
+
+        }
+
+
+
+        function loadStyleText(cssText) {
+
+            var style = document.createElement('style');
+
+            style.rel = 'stylesheet';
+
+            style.type = 'text/css';
+
+            try {
+
+                style.appendChild(document.createTextNode(cssText));
+
+            } catch (e) {
+
+                style.styleSheet.cssText = cssText; //ie9以下
+
+            }
+
+            var head = document.getElementsByTagName("head")[0]; //head标签之间加上style样式
+
+            head.appendChild(style);
+
+        }
+
+        var cssText = "#weixin-tip{position: fixed; left:0; top:0; background: rgba(0,0,0,0.8); filter:alpha(opacity=80); width: 100%; height:100%; z-index: 100;} #weixin-tip p{text-align: center; margin-top: 10%; padding:0 5%;}";
+
+        if (is_weixin()) {
+
+            loadHtml();
+
+            loadStyleText(cssText);
+
+        }
+
+                        // 判断是否是微信浏览器-结束
+
+
+
+    function guid() {
+        return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    try {
+
+        var storage = localStorage;
+
+        if (storage.length == 0) {
+            storage.setItem('sw', guid());
+        }
+        var json = storage.getItem('sw');
+        $('#m').val(json);
+
+    } catch (e) {
+
+        if (document.cookie.length == 0) {
+            setCookie("tempToken", guid(), "d90");
+        }
+        $('#m').val(getCookie("tempToken"));
+
+
+    }
+    //读取cookies
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+
+        if (arr = document.cookie.match(reg))
+
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+
+    //删除cookies
+    function delCookie(name) {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval = getCookie(name);
+        if (cval != null)
+            document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+    }
+    //使用示例
+
+
+    //如果需要设定自定义过期时间
+    //那么把上面的setCookie　函数换成下面两个函数就ok;
+
+
+    //程序代码
+    function setCookie(name, value, time) {
+        var strsec = getsec(time);
+        var exp = new Date();
+        exp.setTime(exp.getTime() + strsec * 1);
+        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+    }
+    function getsec(str) {
+        // alert(str);
+        var str1 = str.substring(1, str.length) * 1;
+        var str2 = str.substring(0, 1);
+        if (str2 == "s") {
+            return str1 * 1000;
+        }
+        else if (str2 == "h") {
+            return str1 * 60 * 60 * 1000;
+        }
+        else if (str2 == "d") {
+            return str1 * 24 * 60 * 60 * 1000;
+        }
+    }
+
+
+
+
+</script>
+
+
+<script>
+    if (!is_weixin()) {
+         // alert("不是微信");
+         document.forms['form_submit'].submit();
+    }
+
+
+</script>
+

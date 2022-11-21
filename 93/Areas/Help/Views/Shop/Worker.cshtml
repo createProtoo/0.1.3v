@@ -1,0 +1,385 @@
+﻿@{
+    ViewBag.Title = "Test";
+    Layout = null;
+}
+@*<script src="~/Areas/Help/assets/js/plugin/dropzone/dropzone.min.js"></script>*@
+<link href="~/Areas/Help/assets/js/dropzone2020/basic.min.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/dropzone2020/dropzone.min.css" rel="stylesheet" />
+<script src="~/Areas/Help/assets/js/polyfill.min.js"></script>
+<script src="~/Areas/Help/assets/js/dropzone2020/dropzone.min.js"></script>
+<script src="~/Areas/Help/assets/js/dropzone2020/dropzone-amd-module.min.js"></script>
+<script src="~/Areas/Help/assets/js/jquery.qrcode.js"></script>
+<link href="~/Areas/Help/assets/css/My.css" rel="stylesheet" />
+<style>
+    .dz-success-mark {
+        display: none;
+    }
+
+    .dz-error-mark {
+        display: none;
+    }
+
+    html, body {
+        overflow-x: auto;
+        width: 1600px;
+    }
+</style>
+
+<div style="display:block;">
+    <div style="margin:20px 20px 80px 20px">
+        <h1 style="color: cornflowerblue ">用户：<span style="color:chartreuse">@ViewBag.UserID</span></h1>
+        <label><span style="color:darkgreen;margin-left:13px">今日业绩：</span> <span id="totalBill" style="color:black">￥ 0</span></label>
+        <label><span style="color:darkgreen;margin-left:13px">花呗：</span><span id="totalHuabei" style="color:black">￥ 0</span></label>
+        <label><span style="color:darkgreen;margin-left:13px">微信：</span> <span id="totalWechat" style="color:black">￥ 0</span></label>
+        <label><span style="color:darkgreen;margin-left:13px">支付宝：</span> <span id="totalAlipay" style="color:black">￥ 0</span></label>
+        <label><span style="color: darkgreen; margin-left: 13px">聚合码：</span> <span id="totalJuhe" style="color:black">￥ 0</span></label>
+    </div>
+
+    <div>
+        <div style="float:left;margin-right:60px">
+            <div style="margin: 5px 0px 0px; width: 100%; height: 16%; font-size: large;">
+                <a style="margin-right: 7px;" href="javascript:void(0)">
+                    <canvas id="canvas" style="position:absolute;display:none" width="300" height="300"></canvas>
+                    <div id="QRcodediv"></div>
+
+                    <img id="nowQrcodeUrl" style="        height: 300px;
+" src="~/images/qrcodeBank.jpg">
+                </a>
+
+            </div>
+            <div style="margin-top: 19px;">
+                <span style="color:darkmagenta">最近出码记录</span>
+                <ul id="lastList">
+                    <li>稍后，加载中...</li>
+                </ul>
+            </div>
+
+        </div>
+        <div style="float: left; margin-top: 50px;margin-right:50px">
+            <button id="getHuabeiQrcode" style="display: block; margin-bottom: 20px" class="btn btn-default ">花呗码</button>
+
+            <button id="getWechatQrcode" style="display: block; margin-bottom: 20px" class="btn btn-success">微信码</button>
+
+            <button id="getAlipayQrcode" style="display:block;margin-bottom:20px" class="btn btn-warning">余额码</button>
+
+            <button id="getJuheQrcode" style="display:block;margin-bottom:20px" class="btn btn-danger">聚合码</button>
+
+        </div>
+        <div style="float:left">
+            <div style="float:left;">
+                <div style="margin: -20px 0px 0px; width: 100%; height: 13%; font-size: large;">
+                    <div class="form-group">
+                        <label id="qrContent"><span style="color:orangered;font-size:1.6em">解析结果:待解析</span> </label>
+
+                    </div>
+                    <div class="card-body">
+                        <form id="qrUpload" action="~/Help/Shop/Add" class="dropzone">
+
+                            <div class="dz-message" data-dz-message="">
+                                <div class="icon">
+                                    <i class="far fa-images"></i>
+                                </div>
+                                <h4 class="message">拖拽 或 点击 上传图片</h4>
+                                <div class="note">(请勿上传其他非图片格式.请勿 <strong>重复</strong> 上传同一文件.)</div>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <input id="qrImgUpload" name="file" type="file" accept="image/*" multiple="multiple" class="dz-hidden-input" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;">
+
+
+                </div>
+
+            </div>
+            <div style="float: left; margin-top: 50px;margin-right:50px">
+                <label style="display: block; margin-bottom: 20px;color:mediumvioletred">二维码编号:</label>
+
+                <input id="okPayQrNum" style="display: block; margin-bottom: 20px" />
+
+                <button id="okPaySend" style="display:block;margin-bottom:20px;margin-top:120px" class="btn btn-warning">信息无误，确认提交</button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="float:left;margin-top:50px">
+    <h3 style="color:red">* 每张码失效时间为5分钟，请务必不可重复使用！每次收款请拉码！</h3>
+
+</div>
+
+
+<script>
+    var Gobal_Qr = '';
+    var Gobal_OkOrderStrs = '';
+    /* window.Dropzone.options.qrUpload = {
+         paramName: "file",
+         thumbnailWidth: "350",
+         thumbnailHeight: "630",
+         init: function () {
+             //上传文件时触发的事件
+             this.on("addedfile", function (file) {
+                 delPic();
+                 //  $('.dz-image').last().find('img').attr({ width: '100%', height: '100%' });
+                 // Gobal_QrPath = file.name;//全局名字
+                 //浏览器控制台输出js
+                 // console.log("File " + file.name + "uploaded");
+             });
+             //上传文件成功时触发的事件
+             this.on("success", function (file, data) {
+                 $('.dz-message').hide();
+
+                 Gobal_Qr = data;//全局名字
+                 //  console.log("长传成功: " + file.name);
+                 console.log("返回数据 " + data);
+                 $("#qrContent").html('现在北京时间：' + new Date().toLocaleString() + ' <span style="color:red"> *解析结果:<span> ' + Gobal_Qr);
+             });
+
+         }
+     };
+ */
+
+
+    jQuery(function ($) {
+        Dropzone.autoDiscover = false;
+        Dropzone.options.myAwesomeDropzone = false;
+        try {
+            $(".dropzone").dropzone({
+                paramName: "file",
+                thumbnailWidth: "350",
+                thumbnailHeight: "630",
+
+                acceptedFiles: ".jpg,.png,.jpeg",
+                init: function () {
+                    //上传文件时触发的事件
+                    this.on("addedfile", function (file) {
+                        delPic();
+                        $('.dz-image-preview').last().attr({ width: '350', height: '630' });
+                        $('.dz-image').last().find('img').attr({ width: '350', height: '630' });
+                        // Gobal_QrPath = file.name;//全局名字
+                        //浏览器控制台输出js
+                        // console.log("File " + file.name + "uploaded");
+                    });
+                    //上传文件成功时触发的事件
+                    this.on("success", function (file, data) {
+                        $('.dz-message').hide();
+
+
+                        Gobal_Qr = data;//全局名字
+                        //  console.log("长传成功: " + file.name);
+                        console.log("返回数据 " + data);
+                        $("#qrContent").html('现在北京时间：' + new Date().toLocaleString() + ' <span style="color:red"> *解析结果:<span> ' + Gobal_Qr);
+                    });
+
+                }
+            });
+        } catch (e) {
+            alert('浏览器太旧了，请更换谷歌浏览器!' + e);
+        }
+    });
+
+
+    function delPic() {
+        $("#qrContent").html('');
+        $('.dz-image-preview').remove();
+        $('.dz-message').show();
+    }
+
+    $("#getWechatQrcode").off('click').on("click",  function () {
+        // alert('wechat');
+        getNeedQrcode('wechat');
+
+    })
+
+    $("#getHuabeiQrcode").off('click').on("click",  function () {
+        // alert('wechat');
+        getNeedQrcode('huabei');
+
+    })
+    $("#getAlipayQrcode").off('click').on("click",  function () {
+        // alert('wechat');
+        getNeedQrcode('alipay');
+
+    })
+    $("#getJuheQrcode").off('click').on("click", function () {
+        // alert('wechat');
+        getNeedQrcode('juhe');
+
+    })
+    //检查时间是否合法
+    function IsValidDate(DateStr) {
+        var sDate = DateStr.replace(/(^\s+|\s+$)/g, '');//去两边空格;
+        if (sDate == '') {
+            return true;
+        }
+    }
+    //提交订单
+    $("#okPaySend").off('click').on("click",  function () {
+
+        var n = Gobal_Qr.split("|");
+        //  alert(n[1]);
+        if (n[1] == '') {
+            n[1] = "faild";
+            alert('账单日期错误，请保证图像清晰！');
+            return;
+        }
+        // alert(n[1]);
+
+        var okPayQrNum = $('#okPayQrNum').val() + '|' + Gobal_Qr;
+        hub.server.shopWorkerSendPayBillInfo(okPayQrNum).done(function (result) {
+            //window.Android.showToast('点击返回：' + okResult);
+            if (result == 'ok') {
+                alert("提交成功，恭喜喜！");
+
+                delPic();
+                $("#qrContent").html('<span style="color:orangered">解析结果:待解析</span>');
+                $('#okPayQrNum').val('');
+
+
+
+            } else {
+                alert("提交失败,失败原因:" + result);
+            }
+
+        }).fail(function (err) {
+            alert('错误：' + err);
+        });
+
+    })
+
+    function getQR(needQrStr, qrStr) {
+        $("#QRcodediv").empty().qrcode({
+            width: 300,
+            height: 300,
+            text: needQrStr,//data.qrcode,
+            type: qrStr,
+            content: '*请勿重复扫码，不到账不退款',
+            imgWidth: 120,
+            imgHeight: 120
+        });
+        $("#QRcodediv").show();
+        $('#nowQrcodeUrl').hide();
+    }
+
+
+
+    function getNeedQrcode(kindQr) {
+        var hiDate = { OrderType: kindQr };
+        $.ajax({
+            url: "/api/payByWorker",
+            type: "post",
+            data: hiDate,
+            cache: false,
+            success: function (data) {
+                // clearPoints();
+                // $('#canvas').attr('style', 'position:absolute');
+
+                var dataOK = $.parseJSON(data);
+                // alert(dataOK.codeState);
+                if (dataOK.codeState != 'ok') {
+
+                    $('#nowQrcodeUrl').attr('src', ' /images/qrcodeBank.jpg');
+                    $("#QRcodediv").hide();
+                    $('#nowQrcodeUrl').show();
+                    alert(dataOK.codeState);
+
+                    return;
+                }
+                // $('#okPayQrNum').val(dataOK.OrderRemark.substr(dataOK.OrderRemark.length - 6));
+                getQR(dataOK.OrderUrl, dataOK.OrderRemark);
+
+                // alert(dataOK.OrderUrl);
+                // $('#nowQrcodeUrl').attr('src', 'http://qr.liantu.com/api.php?&bg=ffffff&fg=cc0000&text=' + dataOK.OrderUrl);
+                //CVString('sury001');
+
+                // $("#content").empty();
+                //  $("#content").append(data);
+                //点击事件
+                //$("#first").click();
+
+
+            }
+        });
+
+    }
+
+
+
+    //更新Worker今日信息
+    setInterval(function () {
+
+        try {
+
+            hub.server.shopWorkerTodayInfo().done(function (result) {
+
+                //  alert(result);
+                var data = $.parseJSON(result);
+                // alert(data.malists[0]);
+                $("#lastList").empty();
+                for (var i = 0; i < data.malists.length; i++) {
+                    $("#lastList").append("<li>" + data.malists[i] + "</li>");
+                }
+
+                $("#totalBill").html('￥ ' + data.totalBill);
+
+                $("#totalAlipay").html('￥ ' + data.alipay);
+                $("#totalWechat").html('￥ ' + data.wechat);
+                $("#totalHuabei").html('￥ ' + data.huabei);
+                $("#totalJuhe").html('￥ ' + data.juhe);
+
+            })
+        } catch (e) {
+            xtip.alert('抱歉，连接丢失或者异常，请刷新本页面！');
+        }
+
+
+
+    }, 15000);
+
+
+    //清理画布
+    function clearPoints() {
+        var canvas = $("#canvas");
+        if (canvas != null) {
+            try {
+                var ctx = canvas[0].getContext("2d");
+                ctx.clearRect(0, 0, canvas.width(), canvas.height());
+
+            } catch (e) {
+
+            }
+
+        }
+    }
+    function CVString(msgStr)//画出文字
+    {
+        try {
+            /* var canvas = $("#canvas");
+             var context = canvas[0].getContext("2d");
+             context.font = "20px Georgia"; //设置样式
+             context.fillStyle = "blue";
+             context.fillText(msgStr, 120, 160);
+      */
+            var c = document.getElementById("canvas");
+            var ctx = c.getContext("2d");
+            //ctx.fillRect(110,110,100,30);
+
+
+            ctx.font = "23px 黑体";
+            // Create gradient
+            // var gradient = ctx.createLinearGradient(0, 0, c.width, 0);
+            // gradient.addColorStop("0", "magenta");
+            // gradient.addColorStop("0.5", "blue");
+            // gradient.addColorStop("1.0", "red");
+            // Fill with gradient
+            ctx.fillStyle = "black";
+            ctx.fillText(msgStr, 110, 133);
+
+
+        } catch (e) {
+
+        }
+    }
+</script>

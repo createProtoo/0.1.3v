@@ -1,0 +1,77 @@
+﻿@*商户管理页面*@
+
+
+@{
+    ViewBag.Title = "商家管理";
+    Layout = null;
+    // Layout = "~/Areas/Help/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Areas/Help/assets/css/My.css" rel="stylesheet" />
+
+<div class="page-header">
+    <h4 id="orderTitle" class="page-title">商户管理</h4>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card" style="width:105%;margin-left:-3%">
+            <div class="card-header">
+
+                <div style="display:inline">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-secondary" onclick="xtip_win();">
+                                <span class="btn-label">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                创建商户
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="shop-datatables" class="display table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>商户名称</th>
+                                <th>商户UID</th>
+                                <th>微信</th>
+                                <th>支付宝</th>
+                                <th>云闪付</th>
+                                <th>微信浮动</th>
+
+                                <th>支付宝浮动</th>
+                                <th>云闪付浮动</th>
+
+                                <th>操作</th>
+                                <th>创建时间</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="~/Areas/Help/assets/js/mm/shop.js"></script>
+<!--核心样式-->
+<link rel="stylesheet" href="~/Areas/Help/assets/css/modallayer.min.css">
+
+<!--插件-->
+<script src="~/Areas/Help/assets/js/modallayer-ie.min.js"></script>

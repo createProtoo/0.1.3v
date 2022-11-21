@@ -1,0 +1,130 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML>
+
+<HTML>
+<HEAD>
+    <META content="IE=11.0000"
+          http-equiv="X-UA-Compatible">
+    <TITLE>登录</TITLE>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <META name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0">
+    <META name="apple-mobile-web-app-capable" content="yes">
+    <META name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <META name="format-detection" content="telephone=no">
+    <LINK href="/favicon.ico" rel="icon" type="image/x-icon">
+    <LINK href="~/vip_files/style.css"
+          rel="stylesheet" type="text/css">
+    <SCRIPT type="text/javascript">var basePath = "";</SCRIPT>
+
+    <SCRIPT src="~/vip_files/jquery-2.2.0.min.js" type="text/javascript"></SCRIPT>
+
+    <SCRIPT src="~/vip_files/sha1.js" type="text/javascript"></SCRIPT>
+
+    <SCRIPT src="~/vip_files/common.js" type="text/javascript"></SCRIPT>
+
+    <META name="GENERATOR" content="MSHTML 11.00.10570.1001">
+</HEAD>
+<BODY>
+    <!--内容区-->
+    <DIV class="viewport">
+        <DIV class="regLog_heading">
+            <A href="#">
+                <IMG class="logo2"
+                     src="~/vip_files/logo2.png">
+            </A>
+        </DIV>
+        <DIV class="mCon2">
+            <DIV class="regLog_tab">
+                <SPAN class="on">登录</SPAN>
+            </DIV>
+            <DIV class="form_msgErrBox"><SPAN class="form_msgErr"></SPAN></DIV>
+            <FORM name="form_login" id="loginForm" action="~/vip/login" method="post">
+                <div class="form_item">
+                    <input name="auam" class="form_txtInput" id="auam" type="text" maxlength="20" placeholder="请输入您注册时的手机号码" value="">
+                </div>
+                <DIV class="form_item">
+                    <INPUT class="form_txtInput" name="apad" id="apad" type="password" placeholder="请输入密码" value="">
+
+                </DIV>
+                <DIV class="pt5"><INPUT class="form_btn" id="loginBtn" type="submit" value="登录"></DIV>
+                <div class="form_linkTxt tr mb30">
+                    <a href="~/Vip/FindPwd">忘记密码</a>
+                </div>
+            </FORM>
+        </DIV>
+    </DIV><!--内容区 End-->
+    <DIV class="footer">
+        <DIV class="footer_con">
+            <DIV class="foot_link">
+                <A href="#">关于我们</A>
+                <A href="#">联系方式</A>
+                <A href="#">合作伙伴</A>
+            </DIV>
+            <DIV class="foot_info">Copyright © 1998 - 2019 FireCoin  </DIV>
+        </DIV>
+    </DIV>
+    <script type="text/javascript">
+        $(function () {
+            changeVeriCode();
+            if ("") {
+                pubMsg("", 1000);
+            }
+
+            $(".form_txtInput").focus(function () {
+                $(document).scrollTop($(".regLog_tab").offset().top);
+            });
+
+        });
+
+        $("#loginBtn").click(function () {
+            //用户名
+            var username = $("#auam").val();
+            var reg = /^0?(13|15|18|14|17)[0-9]{9}$/;
+            if (!reg.test(username)) {
+                pubMsg("请输入正确的账号(手机号码)", 1000);
+                return false;
+            }
+
+            //密码
+            var pass = $("#apad").val();
+            if (pass == "" && pass.length < 6 || pass.length > 16) {
+                $("#apad").focus();
+                pubMsg("密码为6-16位字符", 1000);
+                return false;
+            }
+
+            if ($("#veriCode").is(":visible") && $("#veriCode").val() == "") {
+                pubMsg("验证码不能为空", 1000);
+                return false;
+            }
+
+            $("#hid_password").val(hashSha1($("#apad").val()));
+           // setCookie('loginUszername', $("#auam").val(), 365);
+            $("#loginForm").submit();
+        });
+
+        function getCookie(c_name) {
+            if (document.cookie.length > 0) {
+                c_start = document.cookie.indexOf(c_name + "=")
+                if (c_start != -1) {
+                    c_start = c_start + c_name.length + 1
+                    c_end = document.cookie.indexOf(";", c_start)
+                    if (c_end == -1) c_end = document.cookie.length
+                    return unescape(document.cookie.substring(c_start, c_end))
+                }
+            }
+            return ""
+        }
+        function setCookie(c_name, value, expiredays) {
+            var exdate = new Date()
+            exdate.setDate(exdate.getDate() + expiredays)
+            document.cookie = c_name + "=" + escape(value) +
+                ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
+        }
+    </script>
+</BODY>
+</HTML>
+

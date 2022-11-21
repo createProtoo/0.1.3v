@@ -1,0 +1,3 @@
+﻿ .air-balloon{ position:absolute; top:-100px; left:-100px; z-index:50;}
+.air-balloon.ab-1{ width:43px; height:78px; background:url(/images/air-balloon-1.png) no-repeat;}
+ .air-balloon.ab-2{ width:24px; height:31px; background:url(/images/air-balloon-2.png) no-repeat;}

@@ -1,0 +1,601 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Language" content="zh-cn">
+    <meta name="apple-mobile-web-app-capable" content="no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="format-detection" content="telephone=no,email=no" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="0" />
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title id="pay_title">云闪付</title>
+    <link href="/css/pay1.css" rel="stylesheet" media="screen">
+    @*<script type="text/javascript" src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>*@
+    <script src="~/Scripts/App/jquery.min.js"></script>
+    <script src="/static/js/jquery.qrcode.min.js"></script>
+    <script src="~/Areas/Help/assets/js/ua/lib/useragent-base.js"></script>
+    <script src="~/Areas/Help/assets/js/ua/lib/ua-device.js"></script>
+    @*<script src="https://cdn.jsdelivr.net/clipboard.js/1.5.12/clipboard.min.js"></script>*@
+
+    <script src="~/Scripts/clipboard.min.js"></script>
+    <style type="text/css">
+        .weixin_tip_img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body">
+        <h1 class="mod-title">
+            <span id="pay_span" class="ico_log"></span>
+        </h1>
+
+        <div class="mod-ct" style="margin-top:10px">
+
+            <p id="money" style="padding-top:18px;color:orangered;font-size:30px;"></p>
+
+
+
+            <div style="position: relative;display: inline-block;width:200px;height:200px;" id="qrcode">
+                <img src="/images/loading-img.gif" id="show_qrcode" width="200" height="200" title="本二维码仅可支付一次,请勿重复使用,本二维码仅可支付一次,请勿重复使用,本二维码仅可支付一次,请勿重复使用,本二维码仅可支付一次,请勿重复使用" style="display: block;">
+            </div>
+
+            <div class="time-item" style="margin-top: 20px;">
+
+                <div class="time-item"><h1 id="tradeNo_h1">订单号:</h1> </div>
+                <strong id="hour_show">0时</strong>
+                <strong id="minute_show">0分</strong>
+                <strong id="second_show">0秒</strong>
+            </div>
+
+            <div id="paybtn" class="paybtn" style="display:block; margin: 0 auto;">
+                <a href="javascript:void(0);" onclick="goAli()" id="alipaybtn" class="btn btn-primary" style="margin: 0 auto;display: none" target="_blank">立即支付</a>
+           
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+    <script type="text/javascript">
+
+        var isZhuanZhang = false;//是否是转账模式
+
+
+        setInterval(function () {
+
+            getNewTime();
+
+        }, 10000); // Restart connection after 10 seconds.
+
+
+        function getNewTime() {
+
+
+
+            $.post(
+                "/api/help/get_pay",
+                {
+                    p: $.getUrlParam("p"),
+                    x: x,
+                    y: y,
+                    z: z,
+                },
+                function (data) {
+                    if (data.code == 0) {
+                        if (data.okdata.status == 1) {
+                            var diffMills = data.okdata.validTimeMills - new Date().getTime();
+                            intDiff = diffMills / 1000;
+
+                        }
+
+
+                    }
+
+
+                }
+            );
+
+
+
+
+
+
+        }
+
+
+
+        //try {
+        //    var storage = localStorage;
+        //    var json = storage.getItem('sw');
+        //    // alert(json);
+
+        //} catch (e) {
+
+        //}
+
+
+        //复制
+        function copyName() {
+           
+            var clipboard = new Clipboard('#bankName');
+            clipboard.on('success', function (e) {
+                alert("姓名复制成功", 1500);
+                e.clearSelection();
+                console.log(e.clearSelection);
+            });
+        }
+          
+        function copyNo() {
+            var clipboard = new Clipboard('#bankno');
+            clipboard.on('success', function (e) {
+                alert("云闪付账号复制成功", 1500);
+                e.clearSelection();
+                console.log(e.clearSelection);
+            });
+        }
+
+
+
+
+
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+
+        })(jQuery);
+
+
+        var u = navigator.userAgent;
+
+        showResult(u);
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+
+        var readToPay = false;
+        var forceGetResult = false;
+
+        var myTimer;
+        var getPayTimer;
+
+        var strcode = '';
+        var outTime = "180";
+        var intDiff = "180";
+        var goTimerBegin = new Date().getTime();
+        var open_alipay_url;
+        var qrcodeUrl;
+
+
+        / --- 4.18新增 ---/
+        var u = navigator.userAgent;
+        var str = '';
+        var tbUrl = '';
+        var goAliUrl = '';
+        var reg = new RegExp("amp;", "g");
+        str = str.replace(reg, "");
+        // tbUrl = tbUrl.replace(reg, "");
+        // goAliUrl = goAliUrl.replace(reg, "");
+
+        var isAliApp = u.indexOf('AliApp') > -1
+            || u.indexOf('AlipayClient') > -1;
+        var isWindows = u.indexOf('Windows') > -1;
+        if (isAliApp) {
+
+        } else {
+
+        }
+        if (isWindows) {
+
+        } else {
+
+        }
+
+
+
+
+        var h5url = '';
+        var x, y, z;
+
+        var scheme = 'alipays://platformapi/startapp?appId=60000029&showLoading=YES&url=';
+        var tradeNo = "";
+        var payChannel = "";
+
+        var jumpUrl = '';
+        var zkIs = false;
+
+        function goAli() {
+
+
+            var aliOpenUrl = "alipays://platformapi/startapp?appId=60000029&showLoading=YES&url=" + encodeURIComponent(jumpUrl + "&fx=false");
+
+            aliOpenUrl = getRootPath_dc() + "/gopay" + "?p=" + $.getUrlParam("p");
+
+            // alert(aliOpenUrl);
+            if (isZhuanZhang == true) {
+                aliOpenUrl = "chsp://#";
+            }
+
+
+            location.href = aliOpenUrl;
+        }
+
+        function getRootPath_dc() {
+            var pathName = window.location.pathname.substring(1);
+            var webName = pathName == '' ? '' : pathName.substring(0, pathName.indexOf('/'));
+            if (webName == "") {
+                return window.location.protocol + '//' + window.location.host;
+            }
+            else {
+                return window.location.protocol + '//' + window.location.host + '/' + webName;
+            }
+        }
+        / --- END4.18新增 ---/
+
+        function getPayInfo() {  //获取二维码
+            //0.5秒去获取一次
+            getPayTimer = window.setInterval(function () {
+                if (readToPay == true) {
+
+                    clearInterval(getPayTimer);
+
+                    return;
+                }
+                $.post(
+                    "/api/help/get_pay",
+                    {
+                        p: $.getUrlParam("p"),
+                        x: x,
+                        y: y,
+                        z: z,
+                    },
+                    function (data) {
+
+                        if (data.code == 0) {
+                            //status=0是默认的,这个时候一直在获取数据,
+                            //3是超时
+                            //1是出码
+                            if (data.okdata.status == 1) {
+                                forceGetResult = true;
+                                // clearInterval(myTimer);
+                                clearInterval(getPayTimer);
+                                readToPay = true;
+                            }
+
+                            if (data.okdata.status == 2) {//这个是停止计时,隐藏按钮
+                                forceGetResult = true;
+                                clearInterval(myTimer);
+                                clearInterval(getPayTimer);
+
+                                // checkdata();
+
+                                $("#alipaybtn").css("display", "none");
+                                $("#alipaybtn2").css("display", "none");
+
+                                return;
+                            }
+                            if (data.okdata.status == 3) {
+                                qrcode_timeout();
+                                clearInterval(myTimer);
+                                clearInterval(getPayTimer);
+                                $("#alipaybtn").css("display", "none");
+                                $("#alipaybtn2").css("display", "none");
+                                return;
+                            }
+
+                            if (data.okdata.status == 0) {
+                                return;
+                            }
+
+
+                            jumpUrl = getRootPath_dc() + "/pay/v1/alipay/zzfx?no=" + data.okdata.tradeNo;
+
+                            tradeNo = data.okdata.tradeNo;
+                            payChannel = data.okdata.channel;
+
+
+                            if ('alipay_newzk' == payChannel || 'alipay_zk' == payChannel) {
+                                zkIs = true;
+                            } else if ('alipay_newzz' == payChannel || 'alipay_zz' == payChannel) {
+                                $("#showRealNameDiv").css("display", "block");
+                                $("#realNameShow").html(data.okdata.receiverRealName);
+                            }
+
+                            $("#money").html("请支付：¥" + data.okdata.realMoney + " 元");
+                            $("#tradeNo_h1").html("订单:" + data.okdata.tradeNo);
+
+                            $("#alipaybtn").css("display", "block");
+
+                            $('#qrcode').html("");
+                            //判断是否是转账模式
+                            if (data.okdata.qrcodeUrl.indexOf('|') > 0) {
+                                var bankno = data.okdata.qrcodeUrl.split('|')[0];
+                                var bankName = data.okdata.qrcodeUrl.split('|')[1];
+                                $('#qrcode').html('<span style="color:darkslategrey;margin: 38px 0px 10px 0px; font-size: 14px;display:block">23点后，请点击复制转账</span><p id="bankno" onclick="copyNo()" data-clipboard-action="copy" data-clipboard-target="#bankno"  style="color: blue; font-size: 3em;">' + bankno + '</p>' + '<p id="bankName" data-clipboard-action="copy" data-clipboard-target="#bankName"  onclick="copyName()" style="color: green; font-size: 3.1em;">' + bankName + '</p>'+'<video  autoplay="autoplay" muted="muted" type="video/mp4"  style="margin-left:-50px"  width="320" height="640" controls>  <source src="/images/ysf.mp4" type="video/mp4">  您的浏览器不支持 HTML5 video 标签。</video>');
+                                isZhuanZhang = true;
+                            } else {
+                                isZhuanZhang = false;
+                                $('#qrcode').qrcode({
+                                    render: "canvas",
+                                    width: 160,
+                                    height: 160,
+                                    typeNumber: -1,
+                                    text: data.okdata.qrcodeUrl,
+                                    correctLevel: 3,
+                                    background: "#ffffff",
+                                    foreground: "#000000"
+                                });
+                            }
+
+
+
+
+
+                            var diffMills = data.okdata.validTimeMills - new Date().getTime();
+                            intDiff = diffMills / 1000;
+                            //alert("准备"+intDiff);
+                            if (intDiff <= 0) {
+                                intDiff = 0;
+                                qrcode_timeout();
+                                clearInterval(myTimer);
+                                clearInterval(getPayTimer);
+                                // alert("0");
+                            }
+                            readToPay = true;
+                            // alert("2");
+                        }
+                    }
+                );
+
+            }, 500);
+
+        }
+
+
+        var pType = $.getUrlParam("t");
+        switch (pType) {
+            case "alipay":
+                $("#pay_title").html("支付宝");
+                $("#pay_span").attr("class", "ico_log ico-1");
+                //$("#showtext").html("打开支付宝 [扫一扫]");
+                //$("#showTipsScan").html("然后在支付宝扫一扫中选择“相册”即可。");
+                break;
+            case "wechat":
+                $("#pay_title").html("微信");
+                $("#pay_span").attr("class", "ico_log ico-3");
+                //$("#wechat_foot").css("display","block");
+                //$("#showtext").html("打开微信 [扫一扫]");
+                //$("#showTipsScan").html("然后在微信扫一扫中选择“相册”即可，");
+                break;
+            case "unionpay":
+                $("#pay_title").html("云闪付");
+                $("#pay_span").attr("class", "ico_log ico-2");
+                //$("#showtext").html("打开云闪付 [扫一扫]");
+                //$("#showTipsScan").html("然后在云闪付扫一扫中选择“相册”即可。");
+                break;
+            default:
+                break;
+        }
+
+
+        goTimer();
+
+        getPayInfo();
+
+
+        function goTimer() {
+            myTimer = window.setInterval(function () {
+                var day = 0,
+                    hour = 0,
+                    minute = 0,
+                    second = 0;//时间默认值
+                if (intDiff > 0) {
+                    day = Math.floor(intDiff / (60 * 60 * 24));
+                    hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                    minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                    second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                }
+                if (minute <= 9) minute = '0' + minute;
+                if (second <= 9) second = '0' + second;
+                $('#hour_show').html('<s id="h"></s>' + hour + '时');
+                $('#minute_show').html('<s></s>' + minute + '分');
+                $('#second_show').html('<s></s>' + second + '秒');
+                if (hour <= 0 && minute <= 0 && second <= 0) {
+                    qrcode_timeout();
+                    // alert(minute);
+                    clearInterval(myTimer);
+                }
+                intDiff = intDiff - 1;
+
+                // if (strcode != ""){
+                checkdata();
+
+                // }
+
+            }, 1000);
+        }
+
+        function checkdata() {
+            if (readToPay == false && forceGetResult == false) {
+                return;
+            }
+
+            $.post(
+                "/api/help/get_result",
+                {
+                    p: $.getUrlParam("p"),
+
+                },
+                function (data) {
+
+                    if (data.code == 0) {
+
+                        paySuccAndReturnUrl(data);
+                    }
+                }
+            );
+        }
+
+        function paySuccAndReturnUrl(data) {
+            window.clearInterval(myTimer);
+
+            $('#show_qrcode').attr("src", "/images/pay_ok.png");
+            $('#qrcode').html('<img src="/images/pay_ok.png" id="show_qrcode" width="200" height="200" title="本二维码仅可支付一次,请勿重复使用,本二维码仅可支付一次,请勿重复使用,本二维码仅可支付一次,请勿重复使用,本二维码仅可支付一次,请勿重复使用" style="display: block;">');
+            // alert("rrrr");
+            $("#use").remove();
+            $("#money").text("支付成功!");
+            $("#paybtn").attr("style", "display:none;");
+            $("#alipaybtn").css("display", "none");
+            $("#alipaybtn2").css("display", "none");
+            // $("#msg").html("<h1>即将返回商家页</h1>");
+            // $("#msg").html("<h1>即将<a href=''+data.data.returnUrl+''>跳转</a>回商家页</h1>");
+            /*setTimeout(function(){
+                location.replace(data.data.returnUrl);
+            }, 3000);*/
+        }
+
+        function qrcode_timeout() {
+            $('#qrcode').html('<img src="/images/pay_ok.png" id="show_qrcode" width="200" height="200" title="本二维码仅可支付一次,请勿重复使用,本二维码仅可支付一次,请勿重复使用,本二维码仅可支付一次,请勿重复使用,本二维码仅可支付一次,请勿重复使用" style="display: block;">');
+
+            $('#show_qrcode').attr("src", "/images/qrcode_timeout.png");
+            $("#paybtn").attr("style", "display:none;");
+            $('#money').text("请重新下单");
+
+        }
+        //function setCookie(name, value) {
+        //    var Days = 30;
+        //    var exp = new Date();
+        //    exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+        //    document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+        //}
+        function showResult(uaStr) {
+            var res_ua = new uaDevice(uaStr);
+            // handle browser
+            var ua_browser = res_ua['browser']['name'] || '-';
+            var ua_browser_version = '-';
+            if (res_ua['browser']['version'] && res_ua['browser']['version']['original']) {
+                ua_browser_version = res_ua['browser']['version']['original'];
+                // ua_browser_version = ua_browser_version.match(/(\d*\.?\d*)/)[1];
+            }
+            x = (ua_browser + " " + ua_browser_version);
+
+            var ua_osName = res_ua['os']['name'] || '-';
+            var ua_osVersion = '-';
+            if (res_ua['os']['version'] && res_ua['os']['version']['original']) {
+                ua_osVersion = res_ua['os']['version']['original'];
+                // ua_osVersion = ua_osVersion.match(/(\d*\.?\d*)/)[1];
+            }
+            y = (ua_osName + " " + ua_osVersion);
+
+            // handle ua_device
+            var ua_device_type = res_ua['device']['type'] || '-';
+            var ua_device_model = res_ua['device']['model'] || '-';
+            var ua_device_manufacturer = res_ua['device']['manufacturer'] || '-';
+            z = (ua_device_manufacturer + " " + ua_device_model);
+            /* alert(x);
+             alert(y);
+             alert(z);*/
+
+            if (y.toLowerCase().indexOf('win') > -1) {
+                $("#paybtn").attr("style", "display:none;");
+            }
+
+
+            // setCookie('clientInfo',x+'|'+y+'|'+z)
+
+        }
+
+
+
+        // 判断是否是微信浏览器-begin
+
+        function is_weixin() {
+
+            var ua = navigator.userAgent.toLowerCase();
+
+            if (ua.match(/MicroMessenger/i) == "micromessenger") {
+
+                return true;
+
+            } else {
+
+                return false;
+
+            }
+
+        }
+
+        var winHeight = typeof window.innerHeight != 'undefined' ? window.innerHeight : document.documentElement.clientHeight;
+
+        function loadHtml() {
+
+            var div = document.createElement('div');
+
+            div.id = 'weixin-tip';
+
+            div.innerHTML = '<p><img class="weixin_tip_img"  src="/images/live_weixin.png" alt="微信打开"/></p>';
+
+            document.body.appendChild(div);
+
+        }
+
+
+
+        function loadStyleText(cssText) {
+
+            var style = document.createElement('style');
+
+            style.rel = 'stylesheet';
+
+            style.type = 'text/css';
+
+            try {
+
+                style.appendChild(document.createTextNode(cssText));
+
+            } catch (e) {
+
+                style.styleSheet.cssText = cssText; //ie9以下
+
+            }
+
+            var head = document.getElementsByTagName("head")[0]; //head标签之间加上style样式
+
+            head.appendChild(style);
+
+        }
+
+        var cssText = "#weixin-tip{position: fixed; left:0; top:0; background: rgba(0,0,0,0.8); filter:alpha(opacity=80); width: 100%; height:100%; z-index: 100;} #weixin-tip p{text-align: center; margin-top: 10%; padding:0 5%;}";
+
+        if (is_weixin()) {
+
+            loadHtml();
+
+            loadStyleText(cssText);
+
+        }
+
+                        // 判断是否是微信浏览器-结束
+
+
+
+
+
+    </script>
+</body>
+</html>

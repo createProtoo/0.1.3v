@@ -1,0 +1,564 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<link href="~/Content/css/jquery.my-modal.1.1.css" rel="stylesheet" />
+
+<link href="~/Content/css/jquery.my-modal.1.1.winStyle.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Scripts/App/themes/metro/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Scripts/App/themes/icon.css">
+@*<link rel="stylesheet" type="text/css" href="~/Scripts/App/demo.css">*@
+<link href="~/Content/App/tongji.css" rel="stylesheet" />
+<link href="~/Content/App/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Plugin/css/demo.css" rel="stylesheet" />
+<link href="~/Content/App/gundong.css" rel="stylesheet" />
+<link href="~/Scripts/App/Toast/css/style.css" rel="stylesheet" />
+<link href="~/css/handShow.css" rel="stylesheet" />
+
+
+
+
+<div id="dlg2" class="easyui-dialog" title="订单详情" style="top:30px; width:100%;height:96%;max-width:800px;padding:10px;z-index:99999;display:none" data-options="
+            iconCls:'icon-love',
+            onResize:function(){
+                $(this).dialog('close');
+            }">
+    <p>
+        <div style="font-size: 2em; font-weight: 900;">请及时完成交易，已完成请忽略</div>
+        <div style="letter-spacing: 2px; padding-left: 18px;">若已收到款,请及时完成交易    </div>
+        <div id="mySingleOrder" style="margin: 20px 1px; padding: 12px; border: 1px solid red; border-image: none;">
+            <b style="display: block;">订单信息</b>
+            <b style="display: block;">单号:<b id="oneNo"></b>&lt;复制&gt;</b>
+            <b>数量:</b><span id="oneMoney" style="float: right;">150 HC</span>
+            <input type="hidden" name="oneOrderID" id="oneOrderID" />
+        </div>
+
+
+        <div style="border: 1px solid red; border-image: none; color: white; background-color: black;">
+            <b style="font-size: 1.3em;">待收款</b><b>￥</b><b id="thisMoney" style="font-size: 1.3em; float: right;">150.00</b>
+            <b style="color: yellow; letter-spacing: 3px; font-size: 0.8em; margin-left: 123px; display: block;">金额与实际收款金额不符，请勿确认，及时联系客服处理</b>
+        </div>
+        <b style="margin: 15px 1px; color: brown; font-size: 0.9em; display: block;"> 恶意拖延放币，将会减少或不推送订单15天</b>
+        <div style="margin: 30px 1px; text-align: center;">
+            <a onclick="prompt1()" class="btn btn-primary btn-success btn-lg">已收款，确认放币</a>
+            <a style="margin-top:20px" onclick="zhongcai()" class="btn btn-primary btn-secondary btn-lg">传凭证，申请仲裁</a>
+            <input id="head_pic3" name="head_pic3" style="display:none" type="file" onchange="uploadPzPic3()" />
+
+        </div>
+
+        <hr>
+        <div style="margin: 20px 1px; padding: 12px; border: 1px solid red; border-image: none;">
+            <b style="display: block;">收款账号信息</b>
+            <b id="oneKind">收款</b><span id="oneName" style="float: right;"> d地d球</span>
+            <img id="oneImg" style="width: 90%;" src="/upload/f1d46746-488a-4bb7-8070-76afdc0f7542.png">
+        </div>
+
+    </p>
+</div>
+
+
+
+
+<div style="background-color:darkGrey;margin:3px 0 3px 0">
+    @{
+        if (ViewBag.Active == 0)
+        {
+            <div id="jihuoAccount">
+                <h4 style="display:inline;color:white;font-size:14px;margin-left:3%;"> 您的账号未激活，无法接单</h4>
+                <a href="javascript:void(0)"> <h4 style="display:inline;color:green;font-size:15px;margin-left:20%">去激活 》</h4></a>
+            </div>
+        }
+    }
+
+</div>
+
+<div class="jumbotron" style="background-color:lightSlateGray;margin-top:2px">
+    <div id="total" class="js-odoo"></div>
+    <div style="float:right; display: inline;font-size:large"><a href="javascript:void(0)" id="BuyCoin" class="btn btn-primary btn-sm">一键买币 &raquo;</a></div>
+    <div style="color:darkgray"><span style="display:none" id="canuse">0 HC</span> &nbsp;&nbsp;&nbsp;冻结：<span id="freeze">0</span> HC</div>
+    <p style="color:red;font-size:0.8em;margin:6px">*可用余额少于1000HC时无法接单 </p>
+</div>
+
+<div id="part">
+    <div class="jumbotron">
+        <div style="color:dimgray; text-align:center; "><img src="~/images/notice.png" height="18" style="margin-top: -3px; display: inline;" /> <b>通知中心</b></div>
+        <a id="newNotice" href="javascript:void(0)" style="font-size: 0.8em;color:black;">关于订单处理时效问题，系统会自动回调，如果因网络原因回调失败，请手动确认。</a>
+    </div>
+    <div id="myToalOrders" class="jumbotron" style="text-align:center">
+        <div style="width: 355px;height: 160px;overflow: hidden;margin-left: -11px;">
+
+
+            <div class="counter red">
+                <div class="counter-content" style="left: 2px;">
+                    <div class="counter-icon fa fa-rocket"></div>
+                    <span id="tongjiN1" class="counter-value">0</span>
+                </div>
+                <h3 class="title">今日订单</h3>
+            </div>
+
+
+
+            <div class="counter blue" style="left: 119px; top: -163px;">
+                <div class="counter-content">
+                    <div class="counter-icon fa fa-briefcase"></div>
+                    <span id="tongjiN2" class="counter-value">0</span>
+                </div>
+                <h3 class="title">今日流水</h3>
+            </div>
+            <div class="counter purple" style="left: 236px; top: -323px;">
+                <div class="counter-content">
+                    <div class="counter-icon fa fa-mobile"></div>
+                    <span id="tongjiN3" class="counter-value">0</span>
+                </div>
+                <h3 class="title">今日佣金</h3>
+            </div>
+        </div>
+    </div>
+    <div class="jumbotron" style="text-align:center">
+
+        <div style="font-size:large">
+            <a id="StartWork" href="javascript:window.Android.showToast('开始接单')" class="btn btn-primary btn-lg"> 开始接单 </a>
+
+        </div>
+        <div style="margin: 5px 0px 0px; width: 100%; height: 16%; font-size: large;">
+            @*<div style=" display: block;">
+                    <span style="color: red; font-size: 0.7em;">上传二维码</span>
+                    <span style="color: red; font-size: 0.7em;">当前收款码</span>
+                    <span style="color: red; font-size: 0.7em;">码策略</span>
+                </div>*@
+
+            <a style="margin-right: 7px;" class="btn1" href="javascript:void(0)">
+                <img style="height: 90px;" src="/images/update.png">
+            </a>
+            <a style="margin-right: 7px;" href="javascript:void(0)">
+                <img style="height: 90px;" src="~/Home/QrCodeImg">
+            </a>
+            <a style="margin-right: 7px;" class="btn2" href="javascript:void(0)">
+                <img style="height: 90px;" src="/images/setup.png">
+            </a>
+        </div>
+    </div>
+    <div class="jumbotron" style="margin-bottom:43px;">
+        <div class="record_Top">成交订单列表(实时更新中)</div>
+        @*<div style="color:dimgray; text-align:center; "><b style="display:block;color:red">待确认订单</b></div>*@
+        <div style="overflow:scroll;height:100%">
+            <div id="TopGungDong" class="Top_Record" style="margin-top:-5px">
+
+                <div class="topRec_List">
+                    @*<dl>
+                            <dd>编号</dd>
+                            <dd>用户</dd>
+                            <dd>金额</dd>
+                            <dd>时间</dd>
+                        </dl>*@
+                    <div class="maquee" style="margin:0px">
+                        <ul id="tmpUL">
+
+                            
+                         
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="m-modal" style="margin-top:20px">
+    <div class="m-modal-dialog">
+        <div class="m-top">
+            <h4 class="m-modal-title">
+                欢迎您
+            </h4>
+            <span class="m-modal-close">&times;</span>
+        </div>
+
+        <div class="m-middle">
+            <!--content-->
+
+            <div id="uploadQr" style="height:100%;display:none">
+                <div style="width:100%">
+                    @Html.Label("选择图片", new { style = "clear:both" }) <b id="whoOwn" style="color:tomato"></b> <b id="order_state" style="color:red;margin-left:160px"></b>
+                    <img id="img_header" onclick="HeadImg()" style="display:block;margin:0 16px 6px 30%;border:solid #ccc 1px;height:138px;width:160px;border-radius:6px " src=@Url.Content("/images/addqr.png") />
+                    <input id="head_pic" name="head_pic" style="display:none" type="file" onchange="uploadPic()" />
+                    <div style="padding-left:20%"> <label>名称备注：</label><input id="qrName" type="text" placeholder="名称请勿重复,最多10个字" /></div>
+                    <div style="padding-left:20%"><label>码上金额：</label><input id="maxMoney" type="number" placeholder="如不对,请手动纠正，无金额请输入0" /></div>
+                    @*<div style="padding-left:20%"><label>收款频率：</label><input type="number" placeholder="一小时多少单"/></div>*@
+                    <input type="hidden" name="qrUrl" id="qrUrl" />
+                    <input type="hidden" name="qrGuid" id="qrGuid" />
+                    <div style="text-align:center">
+                        @*<a href="javascript:void(0)" id="MyAddQr"  style="margin-top: 10px;" class="btn btn-primary btn-sm">确认添加</a>*@
+                        <button id="MyAddQr" style="margin-top: 10px;" disabled="disabled" class="btn btn-primary btn-sm">确定添加</button>
+                    </div>
+                    <div style="color: darkred; margin-top: 20px;">
+                        *特别说明:支付宝一天只能产生含金额的码20张,你可根据你的接单金额生成整数金额即可(100的倍数),同时请务必传一张无金额的码,到时候系统优先使用整数金额码,无金额的码属于备用.
+                    </div>
+                </div>
+                @*<button id="MyTest">MyTest</button>*@
+            </div>
+
+
+            <div id="QrOrder" style="height:100%;background-color:blue;display:none">
+
+                <h3>暂无数据，请上传</h3>
+            </div>
+
+            <div id="BuyHC" style="height:100%;background-color:blue;display:none;width:365px;padding:0px">
+
+
+                <div class="easyui-tabs" style="width:350px;height:auto;margin-left:-16px">
+                    <div title="注意事项" data-options="iconCls:'icon-help',closable:true" style="padding:2px">
+                        <p style="font-size:14px">关于买卖币的相关说明</p>
+                        <ul>
+                            <li>买币免手续费.</li>
+                            <li>必须使用登记的银行卡付款，否则订单失败，后果自行承担，罚500HC.</li>
+                            <li>必须按系统指定金额付款，小数点后面的金额不能忽略.</li>
+                            <li>转账时严禁填写任何备注信息，否则订单失败，罚1000HC.</li>
+                            <li>为了您的资金安全，提币时，只接受首张银行卡的信息，包括姓名.</li>
+
+
+                        </ul>
+                    </div>
+                    <div title="一键买卖币" style="padding:2px;width:100%">
+                        <div class="easyui-panel" style="width:350px;">
+                            <div style="margin-bottom:20px">
+
+
+                                <div class="easyui-panel" style="width:100%;max-width:400px;padding:1px;">
+                                    <div style="margin-bottom:20px">
+                                        <input id="whichCard" name="whichCard" class="easyui-combobox" style="width:330px;" data-options="
+					                 valueField: 'bkID',
+					                 textField: 'bkNumber',
+                                     nameField: 'bkName',
+					                 label: '请选择卡:',
+					                 labelPosition: 'top'
+					                 ">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div style="margin-bottom:20px">
+                                @*<input class="easyui-textbox easyui-validatebox" data-options="prompt:'请输入金额...',required:true,validType:'email'" style="width:100%;height:28px;">*@
+                                <input id="hcSum" type="text" style="width:330px;height:28px;" class="easyui-numberbox" data-options="min:0,precision:2,prompt:'请输入金额...'">
+                            </div>
+                            <div id="buySellDiv" style="width:340px;text-align:center;margin-bottom:15px">
+                                <a href="#" id="buyHc" class="easyui-linkbutton" data-options="toggle:true,group:'g1'">确认买币</a>
+                                <a href="#" id="sellHc" class="easyui-linkbutton" data-options="toggle:true,group:'g1'">确认卖币</a>
+                            </div>
+
+                            <label class="textbox-label textbox-label-top" for="_easyui_textbox_input8" style="text-align: left; width: 278px;"><span style="color:red"> *</span>单笔限额 ￥1000-9999，请勿超额</label>
+                            <label class="textbox-label textbox-label-top" for="_easyui_textbox_input8" style="text-align: left; width: 278px;"><span style="color:red"> *</span>特别注意：5分钟内支付有效</label>
+                        </div>
+
+                    </div>
+                    <div title="银行卡管理" style="padding:0px">
+                        <div id="myCard">
+
+
+                            <div style="width:100%">
+                                <img style="display:block;margin:0 16px 6px 25%;height:90px;width:160px " src=@Url.Content("/images/upay.png") />
+
+                                <div style="padding-left:20%"> <label style="display:block">姓名：</label><input id="bkUserName" type="text" placeholder="持卡人姓名" /></div>
+                                <div style="padding-left:20%"><label style="display:block">卡号：</label><input id="bkNumber" type="number" placeholder="银行卡号 " /></div>
+                                <div style="padding-left:20%"> <label style="display:block">开户行：</label><input id="bkName" type="text" placeholder="例：北京市招商银行王府井支行" /></div>
+                                <div style="padding-left:20%"><label style="display:block">备注：</label><input id="bkNote" type="text" placeholder="备注信息" /></div>
+                                <div style="text-align:center">
+                                    <button id="MyAddBank" style="margin: 10px 0 10px 0;" class="btn btn-primary btn-sm addBk">确定添加</button>
+                                </div>
+                            </div>
+                            <div id="bkList">
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <div id="myOrder" style="height:100%;background-color:blue;display:none">
+                <div style="border-bottom: 1px solid rgb(238, 238, 238); border-image: none; padding:1px 0px 7px 0px;margin-bottom:3px;">
+
+                    <span>
+                        <input class="easyui-checkbox" disabled checked data-options="onChange:checkbox" id="autoDeal" name="autoDeal" value="autoDeal" label="自动接单:">
+                    </span>
+                    <span style="margin-left:30px">
+                        <input class="easyui-checkbox" data-options="onChange:checkboxTongCheng" id="sameCity" name="sameCity" value="sameCity" label="同城订单:">
+                    </span>
+                    <span id="myHC" style="float:right;"><b style="color:chartreuse">可用</b>0HC</span>
+
+                    @*<a class="btn btn-primary btn-sm" id="DealSelf" style="margin-left: 23px;" href="javascript:void(0)">&lt;&lt; 抢单 &gt;&gt;</a>*@
+                </div>
+                <div id="lastList" style="width: 365px; margin-left: -26px;">
+                    <div id="newnew" class="jumbotron" style="margin-bottom:3px;padding:0px 2px 0px 2px;margin:auto 5px auto 10px;width:96%;">
+                        <div class="record_Top" style="margin-left:33px">订单列表(实时更新中)</div>
+                        <div style="overflow:hidden;height:100%">
+                            <div id="NewGungDong" class="Top_Record" style="margin-top:-5px">
+
+                                <div class="topRec_List">
+
+                                    <div style="margin:0px">
+                                        <ul id="newUL" style="overflow:no-display">
+                                            @*<li>
+                                           <div>微信</div>
+                                           <div>￥***</div>
+                                           <div>杭州</div>
+                                            <div>
+                                               <a class="btn btn-primary btn-sm  " href="javascript:void(0)">
+                                                        抢单 <span class="timeSpan">25</span>s
+                                               </a>
+                                            </div>
+                                        </li>*@
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="myList" style="height:100%;background-color:blue;display:none">
+
+                <div style="width: 365px; margin-left: -26px;">
+                    <div id="newnew2" class="jumbotron" style="margin-bottom:3px;padding:0px 2px 0px 2px;margin:auto 5px auto 10px;width:96%;">
+                        <div class="record_Top" style="margin-left:33px">我的订单</div>
+                        <div style="overflow:hidden;height:100%">
+                            <div id="NewList" class="Top_Record" style="margin-top:-5px">
+
+                                <div class="topRec_List">
+
+                                    <div style="margin:0px">
+                                        <ul id="newUL2" style="overflow:no-display">
+                                            <li style="height: 78px; line-height: 27px;">
+                                                暂无订单...
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="VipCenter" style="height:100%;background-color:blue;display:none">
+
+                <div id="hahahandShow" style="top: 58px;width:95% ">
+                    <div id="handShow">
+                        <div class="togglebox">
+
+                            <input id="toggle1" type="radio" name="toggle" />
+                            <label for="toggle1">关于订单处理</label>
+
+                            <section id="content1">
+                                <p>
+                                    1.我们的订单分为两种,一种是自己手动抢单,另一种是自动分配订单,无论哪种,均应该保持App一直运行。
+                                </p>
+                                <p>
+                                    2.我们的系统支持安卓手机、PC电脑全自动处理订单,苹果用户需要经过考核后，合格就开通苹果用户的自动回调功能。
+                                </p>
+                                <p>
+                                    3.一般白天的订单相对于晚上要少，因此工作赚钱两不误，保持App在线，自动帮您处理订单，赚钱。
+                                </p>
+                            </section>
+
+                            <input id="toggle2" type="radio" name="toggle" />
+                            <label for="toggle2">二维码相关</label>
+
+                            <section id="content2">
+                                <p>
+                                    1.二维码，我们支持微信、支付宝、云闪付【少量用户申请】,请上传您自己的码,如果需要用亲戚朋友同事的二维码,需要对方手机安装App即可,让您赚的更多!
+                                </p>
+                                <p>
+                                    2.如果购买币的用户连续多次未付款成功,系统会自动下架该二维码,请您核实正常后重新上架即可.
+                                </p>
+                                <p>
+                                    3.虚拟币属于新兴产业,国家目前并未承认,但也没官宣是非法,国内热火的区块链技术,就是来源于虚拟币.支付宝等支付为了保障用户的财产安全,对全国各地的收款卖货行为会做一些限制,
+                                    建议您一张二维码收款不要超过2万,并且多张轮流收款,一个人可以申请多个支付账号,可以申请.建议有条件的地区优先跑同城订单.
+                                </p>
+                            </section>
+
+                            <input id="toggle3" type="radio" name="toggle" />
+                            <label for="toggle3">添加银行卡注意要点</label>
+
+                            <section id="content3">
+                                <p>
+                                    请确保首张卡是您的名字,因为如果您不愿意等虚拟币交易完毕而选择出金,那么为了您的资金安全,我们只认首张卡的户名,入金不受该约定.
+                                </p>
+                                <p>
+                                    关于提现的时间:一般当天16:00之前处理,在此之后的次日处理(必须在您最后一笔订单完成后6小时才可以申请).
+                                </p>
+                            </section>
+
+                            <input id="toggle4" type="radio" name="toggle" />
+                            <label for="toggle4">关于我们</label>
+
+                            <section id="content4">
+                                <p>
+                                    * 火币网旗下机构,从事虚拟币交易多年,安全可靠,请放心交易.我们坚决反对任何形式的洗钱活动及交易,用户必须完成至少3笔订单,方能出金,否则出金收取手续费!
+                                </p>
+                                <p>
+                                    * 火币属于全球知名虚拟币交易平台,由于政策原因,我们总部设在马来西亚,您可以通过客服系统与我们取得联系.
+                                </p>
+                            </section>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div id="myFuliTask" style="height:100%;background-color:blue;display:none">
+
+              
+                <div style="top: 58px;width:98%;">
+                    <input id="head_pic2" name="head_pic2" style="display:none" type="file" onchange="uploadPzPic()" />
+
+                    <div id="fuliList">
+                        <span>福利已抢光...下次请早~</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+
+    function HeadImg() {
+        document.getElementById('head_pic').click();
+    }
+     function HeadImg2() {
+        document.getElementById('head_pic2').click();
+    }
+    function HeadImg3() {
+        document.getElementById('head_pic3').click();
+    }
+    //上传图片
+    function uploadPic() {
+
+
+        $("#img_header").attr("src", $('#head_pic').val());
+        var pic = $('#head_pic')[0].files[0];
+        var fd = new FormData();
+        fd.append('head_pic', pic);        
+        $.ajax({
+            url: "/Home/Add",
+            type: "post",
+            // Form数据
+            data: fd,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                //  alert(data);
+
+                var tmpRlt = $.parseJSON(data);
+                $("#qrUrl").val(tmpRlt.qrUrl);
+                 $("#qrGuid").val(tmpRlt.qrGuid);
+                $("#img_header").attr("src", tmpRlt.imgUrl);
+               
+                if (tmpRlt.p == 1) {
+                    $("#MyAddQr").attr('disabled', false);
+                } else {
+                    $("#MyAddQr").attr('disabled', true);
+                }
+                $("#maxMoney").val(tmpRlt.qrMoney);
+                
+               // alert(tmpRlt.qrMoney);
+
+                // alert($("#qrUrl").val());
+
+            }
+        });
+
+    }
+
+    //上传凭证
+     function uploadPzPic() {
+
+
+         var tmpOrderID = $(".PostBillPaper").attr("data-id");
+       //  alert(tmpOrderID);
+        var pic = $('#head_pic2')[0].files[0];
+        var fd = new FormData();
+        fd.append('head_pic2', pic);
+        fd.append('aaaa', tmpOrderID);
+        $.ajax({
+            url: "/Home/AddPingZheng",
+            type: "post",
+            // Form数据
+            data: fd,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data == 1) {
+                    alert3("提醒：凭证上传成功，请等待审核...");                  
+                    $("#fuliTask").click();
+                } else {
+                     alert3("错误：凭证上传失败，请稍后尝试...");
+                }
+
+
+            }
+        });
+
+    }
+
+
+    function zhongcai() {
+        HeadImg3();
+    }
+
+     //上传仲裁凭证
+     function uploadPzPic3() {
+
+
+         var tmpOrderID = $("#oneOrderID").val();
+       //  alert(tmpOrderID);
+        var pic = $('#head_pic3')[0].files[0];
+        var fd = new FormData();
+        fd.append('head_pic3', pic);
+        fd.append('aaaa', tmpOrderID);
+        $.ajax({
+            url: "/Home/AddPingZheng3",
+            type: "post",
+            // Form数据
+            data: fd,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data == 1) {
+                    alert3("提醒：凭证上传成功，请等待审核...");                  
+                    
+                } else {
+                     alert3("错误：凭证上传失败，请稍后尝试...");
+                }
+
+
+            }
+        });
+
+    }
+
+
+
+
+</script>
+<script src="~/Plugin/lib/odoo.js"></script>

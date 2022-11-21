@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title - HC币</title>
+    @*@Styles.Render("~/Content/css")*@
+
+    @*<link href="~/Content/bootstrap-theme.css" rel="stylesheet" />*@
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 微软雅黑;
+        }
+
+        header {
+            height: 60px;
+            line-height: 60px;
+            width: 100%;
+            color: #fff;
+            font-family: "黑体";
+            font-weight: 200;
+            font-size: 20px;
+            /*背景色渐变*/
+            background: linear-gradient(to bottom right, #F56739, #FB9749);
+        }
+
+        #content {
+            background: linear-gradient(to bottom right, #f5f454, #fbd1b7);
+        }
+
+        .mymenu {
+            display: block;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            color: #474747;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+
+        .subMenu {
+            width: 23%;
+            float: left;
+            cursor: pointer;
+        }
+
+        .menu_name {
+            height: 30px;
+            width: 100%;
+            line-height: 30px;
+        }
+
+        img.menu_img {
+            height: 24px;
+            width: 24px;
+        }
+
+        img {
+            vertical-align: middle;
+            border: 0;
+        }
+
+        .active {
+            color: #FFA129;
+        }
+
+        .text-center {
+            text-align: center
+        }
+    </style>
+
+    <script>
+        // Android需要调用的方法
+        function javaCallJs() {
+            // alert("Android调用了JS的方法");
+            // return;
+            // $.connection.hub.stop();
+            window.Android.playSoundOffline("voice/offline_operator.mp3");
+            //$.connection.hub.start().done(function () {
+            //    window.Android.showToast("已经连接！" + $.connection.hub.id);
+            // }).fail(function (err) {
+            //     window.Android.showToast('连接失败：' + err);
+            //    //  alert('连接失败：' + err);
+            //  });
+
+        }
+        function online() {
+            workSate = 1;
+            // window.Android.showToast('online：' + workSate);
+        }
+        function offline() {
+            workSate = 0;
+            // window.Android.showToast('offline：' + workSate);width:360px;
+        }
+    </script>
+</head>
+<body>
+    <div id="wapaper" style="margin:auto">
+        <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:cornflowerBlue">
+            <div class="container">
+                <div class="navbar-header" style="width:98%">
+                    <a href="showfilelog://com.ymt.pay/">
+                        <img id="myLogs" style="border-radius: 50%; width: 50px; margin-left: 17px; float: left; background-color: cornsilk;" src="/images/zzx.png">
+                    </a>
+                    <div style="margin: 2px 7px; float: left;">
+                        <img  style="width: 15px; margin-top: 4px; float: left;" src="../images/vip2.png">
+                        <p style="color: white; font-size: 1.1em;">@ViewBag.UserID</p>
+                        <p style="color: greenyellow; line-height: 5px; font-size: 0.8em;">越努力越幸运 加油加油! Fighting...</p>
+                    </div>
+                    <h5 id="myOnline" style='background: url("/images/online.png") no-repeat 0px 4px rgb(100, 149, 237); padding: 3px 60px 0px 13px; color: snow; font-weight: bold; float: right;'>在线</h5>
+
+                    @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>*@
+                    @*@Html.ActionLink("H币", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                    <span style="color: red; font-size: 1.1em; margin-top: 13px; display: inline-block;">@ViewBag.UserID</span>
+                    <a href="javascript:void(0)"><img src="~/images/vip.png" style="width:50px;margin-right: 20px; float: right;" /></a>*@
+                </div>
+                @*<div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("主页", "Index", "Home")</li>
+                        <li>@Html.ActionLink("咨询反馈", "About", "Home")</li>
+                        <li>@Html.ActionLink("在线客服", "Contact", "Home")</li>
+                    </ul>
+                </div>*@
+            </div>
+        </div>
+        <div class="container body-content" style="margin-top:0px">
+            @RenderBody()
+
+        </div>
+
+        @*@Scripts.Render("~/bundles/jquery")*@
+        <script type="text/javascript" src="/Scripts/App/jquery.min.js"></script>
+        <script type="text/javascript" src="/Scripts/App/jquery.easyui.min.js"></script>
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+        <!--bottom-->
+    <div id="mymenu" class="mymenu">
+        <div id="one" class="subMenu text-center" data-src="charger.html">
+            <img class="menu_img" data-imgname="my" />
+            <div class="menu_name">首页</div>
+        </div>
+        <div id="two" class="subMenu text-center">
+            <img class="menu_img" data-imgname="my2" />
+            <div class="menu_name">订单中心</div>
+        </div>
+        <div id="fuliTask" class="subMenu text-center" data-src="personal.html">
+            <img class="menu_img" data-imgname="my4" />
+            <div class="menu_name">福利任务</div>
+        </div>
+        <div id="three" class="subMenu text-center" data-src="personal.html">
+            <img class="menu_img" data-imgname="my3" />
+            <div class="menu_name">用户中心</div>
+        </div>
+
+    </div>
+    </div>
+    @Scripts.Render("~/bundles/jsignalR")
+    <script src="/signalr/js"></script>
+    <script src="~/Scripts/jquery.my-modal.1.1.js"></script>
+    <script src="~/Scripts/App/HCHub.js"></script>
+    <script src="~/Scripts/App/UI.js"></script>
+    <script src="~/Scripts/App/Toast/js/popups.js"></script>
+    
+
+    <script type="text/javascript">
+        function add_chatinline() {
+            var hccid = 93922873;//YourID
+            var nt = document.createElement("script");
+            nt.async = true;
+            nt.src = "https://mylivechat.com/chatinline.aspx?hccid=" + hccid;
+            var ct = document.getElementsByTagName("script")[0];
+            ct.parentNode.insertBefore(nt, ct);
+        }
+    </script>
+
+
+
+</body>
+
+</html>
+<script>
+    //$(function () {});
+    $(document).ready(function () {
+       
+        //添加图片
+        $("div .subMenu>img").each(function () {
+            var name = $(this).attr("data-imgname");
+            var src = "../images/" + name + ".png"
+            //设置img的属性和值。
+            $(this).attr("src", src);
+        });
+
+        //点击事件
+        $("div .subMenu").click(function () {
+            // 取消当前激活状态
+            var $img = $(".active>img");
+            //返回被选元素的属性值
+            var name = $img.attr("data-imgname");
+            var src = "../images/" + name + ".png";
+            $img.attr("src", src);
+            $(".active").removeClass("active");
+
+            // 添加新状态
+            $(this).addClass("active");
+            //找到所有 div(subMenu) 的子元素(img)
+            $img = $(this).children("img");
+            name = $img.attr("data-imgname");
+            src = "../images/" + name + "_active.png";
+            //设置img的属性和值。
+            $img.attr("src", src);
+             $("div .subMenu")[0].click();
+            //content根据点击按钮加载不同的html
+            //var page = $(this).attr("data-src");
+            //if (page) {
+            //    $("#content").load("../html/" + page)
+            //}
+        });
+
+        // 自动点击第一个菜单
+        $("div .subMenu")[0].click();
+    });
+
+    /*content高度*/
+
+    var height = $(window).height() - $("header").height() - $("#description").height() - $("#menu").height();
+    $("#content").height(height + "px");
+
+  
+
+
+</script>
+
+

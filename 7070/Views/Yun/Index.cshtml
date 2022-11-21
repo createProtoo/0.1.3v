@@ -1,0 +1,36 @@
+﻿
+@{
+    Layout = null;
+    @model WebApplicationRun.Models.WebApiModel
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @{
+            string aimUrl = "https://10.runtai369.com/pay";
+            if (ViewBag.WhichUrl as string == "2")
+            {
+                aimUrl = "https://100.jidu333.com/pay";
+            }
+
+            <form id='form_submit' name='form_submit' action=@aimUrl method='POST'>
+                <input type='hidden' name='OrderName' value=@Model.OrderName />
+                <input type='hidden' name='OrderType' value='unionpay' />
+                <input type='hidden' name='OrderMoney' value=@Model.OrderMoney />
+                <input type='hidden' name='Sign' value=@ViewBag.Sgin />
+                <input type='hidden' name='PosUid' value=@Model.PosUid />
+                <input type='hidden' name='OrderNo' value=@Model.OrderNo />
+                <input type='submit' value='POST' style='display:none;'>
+            </form>
+        }
+        <script>document.forms['form_submit'].submit();</script>
+    </div>
+</body>
+</html>

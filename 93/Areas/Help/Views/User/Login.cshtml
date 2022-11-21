@@ -1,0 +1,224 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html style="background-color:#f8f2f2">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Login</title>
+    <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+    <link rel="icon" href="~/Areas/help/assets/img/icon.ico" type="image/x-icon" />
+
+    <link href="~/verify/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/verify/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/verify/disk/slidercaptcha.css" rel="stylesheet" />
+    <style>
+
+        .slidercaptcha {
+            margin: 0 auto;
+            width: 314px;
+            height: 286px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
+            margin-top: 40px;
+        }
+
+            .slidercaptcha .card-body {
+                padding: 1rem;
+            }
+
+            .slidercaptcha canvas:first-child {
+                border-radius: 4px;
+                border: 1px solid #e6e8eb;
+            }
+
+            .slidercaptcha.card .card-header {
+                background-image: none;
+                background-color: rgba(0, 0, 0, 0.03);
+            }
+
+        .refreshIcon {
+            top: -54px;
+        }
+    </style>
+
+    <!-- Fonts and icons -->
+    <script src="~/Areas/help/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { "families": ["Open+Sans:300,400,600,700"] },
+            custom: { "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands"], urls: ['~/Areas/help/assets/css/fonts.css'] },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+    <script src="~/static/js/jquery.min.js"></script>
+    <script src="~/static/js/air-balloon.js"></script>
+    <link href="~/css/air-balloon.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="~/Areas/help/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Areas/help/assets/css/azzara.min.css">
+</head>
+<body class="login" style="background:url(/images/banner_login.png) no-repeat; background-position-y: 42%  ">
+    <div class="wrapper wrapper-login">
+        <div id="myloginFrm" style="display:none" class="">
+            <h3 class="text-center">歡迎您登陸</h3>
+            <div class="login-form">
+                <div class="form-group form-floating-label">
+                    <input id="username" name="username" type="text" class="form-control input-border-bottom" required>
+                    <label for="username" class="placeholder">賬號</label>
+                </div>
+                <div class="form-group form-floating-label">
+                    <input id="password" name="password" type="password" class="form-control input-border-bottom" required>
+                    <label for="password" class="placeholder">密碼</label>
+                    <div class="show-password">
+                        <i class="flaticon-interface"></i>
+                    </div>
+                </div>
+                <div class="row form-sub m-0">
+                    @*<div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="rememberme">
+                        <label disable class="custom-control-label" for="rememberme">Remember Me</label>
+                    </div>*@
+
+                    @*<a href="#" class="link float-right">Forget Password ?</a>*@
+                </div>
+                <div class="form-action mb-3">
+                    <a href="#" onclick="login()" class="btn btn-primary btn-rounded btn-login">Sign In</a>
+                </div>
+                <div class="login-account">
+                    <span class="msg">Don't have an account yet ?</span>
+                    <a href="#" id="show-signup" class="link">Sign Up</a>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="form-row">
+                <div class="col-12">
+                    <div class="slidercaptcha card">
+                        <div class="card-header">
+                            <span>登錄前,請完成人機驗證!</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="captcha"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="~/verify/lib/jquery/jquery.min.js"></script>
+        <script src="~/verify/lib/twitter-bootstrap/js/bootstrap.bundle.js"></script>
+        <script src="~/verify/disk/longbow.slidercaptcha.js"></script>
+        <script>
+            var $captcha = $('#captcha').sliderCaptcha({
+                repeatIcon: 'fa fa-redo',
+                setSrc: function () {
+                    return 'http://imgs.sdgxgz.com/images/Pic' + Math.round(Math.random() * 136) + '.jpg';
+                },
+                onSuccess: function () {  //成功事件
+                   
+                    $('#myloginFrm').attr('class', 'container container-login animated fadeIn');
+                    $('#myloginFrm').attr('style', 'display:block');
+                     $('.container-fluid').hide();
+
+                }
+            });
+        </script>
+        <div class="container container-signup animated fadeIn">
+            <h3 class="text-center">Sign Up</h3>
+            <form id="form1" onsubmit="return false" action="##" method="post">
+                <div class="login-form">
+
+                    <div class="form-group form-floating-label">
+                        <input id="fullname" name="fullname" type="text" class="form-control input-border-bottom" required>
+                        <label for="fullname" class="placeholder">Fullname</label>
+                    </div>
+                    <div class="form-group form-floating-label">
+                        <input id="email" name="email" type="email" class="form-control input-border-bottom" required>
+                        <label for="email" class="placeholder">Email</label>
+                    </div>
+                    <div class="form-group form-floating-label">
+                        <input id="passwordsignin" name="passwordsignin" type="password" class="form-control input-border-bottom" required>
+                        <label for="passwordsignin" class="placeholder">Password</label>
+                        <div class="show-password">
+                            <i class="flaticon-interface"></i>
+                        </div>
+                    </div>
+                    <div class="form-group form-floating-label">
+                        <input id="confirmpassword" name="confirmpassword" type="password" class="form-control input-border-bottom" required>
+                        <label for="confirmpassword" class="placeholder">Confirm Password</label>
+                        <div class="show-password">
+                            <i class="flaticon-interface"></i>
+                        </div>
+                    </div>
+                    <div class="row form-sub m-0">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" name="agree" id="agree">
+                            <label class="custom-control-label" for="agree">I Agree the terms and conditions.</label>
+                        </div>
+                    </div>
+                    <div class="form-action">
+                        <a href="#" id="show-signin" class="btn btn-danger btn-rounded btn-login mr-3">Cancel</a>
+                        <a href="#" class="btn btn-primary btn-rounded btn-login">Sign Up</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+
+    </div>
+    <footer style="text-align:center;margin-top:-60px">
+        <b style="color:#ff0000">
+            愛可信台灣軟體研發股份有限公司
+        </b>
+
+        <P>  © 2017- @DateTime.Now.Year AKX Corporation All Rights Reserved </P>
+    </footer>
+    <div class="air-balloon ab-1 png"></div><div class="air-balloon ab-2 png"></div>
+
+    <script src="~/Areas/help/assets/js/core/jquery.3.2.1.min.js"></script>
+    <script src="~/Areas/help/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script src="~/Areas/help/assets/js/core/popper.min.js"></script>
+    <script src="~/Areas/help/assets/js/core/bootstrap.min.js"></script>
+    <script src="~/Areas/help/assets/js/ready.js"></script>
+
+
+    <script type="text/javascript">
+        function login() {
+
+           
+            var loginData = { UID: $('#username').val(), password: $('#password').val() };
+
+            $.ajax({
+                //几个参数需要注意一下
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "/user/loginck",//url
+                data: loginData,
+                success: function (result) {
+                    console.log(result);//打印服务端返回的数据(调试用)
+                    if (result == 200) {
+                        location.replace('/help/index');
+                    }else if (result == 300) {
+                        location.replace('/Help/index');//shop/worker
+                    } 
+                    else {
+                        alert('登陆失败!账号或密码不正确,或者3次错误锁定账号24小时...');
+                    }
+                    ;
+                },
+                error: function () {
+                    alert("异常！");
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

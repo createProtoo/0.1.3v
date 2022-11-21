@@ -1,0 +1,217 @@
+﻿
+
+@{
+    ViewBag.Title = "Test";
+    
+}
+<script src="~/Areas/Help/assets/js/plugin/dropzone/dropzone.min.js"></script>
+<link href="~/Areas/Help/assets/css/My.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/plugin/dialog/css/normalize.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/plugin/dialog/css/demo.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/plugin/dialog/css/dialog.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/plugin/switch/honeySwitch.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/plugin/dialog/css/dialog-donna.css" rel="stylesheet" />
+
+<style>
+    .dz-success-mark {
+        display: none;
+    }
+
+    .dz-error-mark {
+        display: none;
+    }
+</style>
+
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">跑分账号管理</div>
+         <span class="switch-onsw" themecolor="gold" id="directory" style="border-color: gold; box-shadow: gold 0px 0px 0px 16px inset; background-color: gold;"><span class="slidersw"></span></span>
+
+    </div>
+    <div class="card-body">
+        <ul class="nav nav-pills nav-secondary" id="pills-tab" role="tablist">
+
+            <li class="nav-item submenu">
+                <a class="nav-link  active show" id="pills-profile-tab" role="tab" aria-selected="true" aria-controls="pills-profile" href="#pills-profile" data-toggle="pill">添加账号</a>
+            </li>
+            <li class="nav-item submenu">
+                <a class="nav-link" id="pills-contact-tab" role="tab" aria-selected="false" aria-controls="pills-contact" href="#pills-contact" data-toggle="pill">账号列表</a>
+            </li>
+
+            <li class="nav-item submenu">
+                    <a class="nav-link" id="pills-maku-tab" role="tab" aria-selected="false" aria-controls="pills-maku" href="#pills-maku" data-toggle="pill">充值列表</a>
+                </li>
+
+        </ul>
+        <div class="tab-content mt-2 mb-3" id="pills-tabContent">
+
+            <div class="tab-pane fade active show" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+
+
+                <div class="form-group">
+                    <label for="FenUid">用户名</label>
+                    <input class="form-control" id="FenUid" type="text" placeholder="请输入11位数字，建议手机号...">
+                </div>
+                <div class="form-group">
+                    <h5 class="myOrangered">备注</h5>
+                    <input class="form-control" id="FenNote" type="text" placeholder="取个你容易记起来的名字">
+                </div>
+                <div class="form-group">
+                    <div class="form-group">
+                        <label for="FenPwd">登录口令</label>
+                        <input class="form-control" id="FenPwd" type="text" placeholder="仅可登录跑分app">
+                    </div>
+                </div>
+
+                <div class="form-group" style="border:5px solid #308ef3">
+
+                    <label for="FenZfbTotal">支付宝总费率</label>
+                    <input class="form-control" id="FenZfbTotal" type="text" placeholder="一共放出去的点数，比如 1.8">
+                    <label for="FenZfbAgent">代理提成点数</label>
+                    <input class="form-control" id="FenZfbAgent" type="text" placeholder="提成点数，例如 0.3  ***如果是马商模式，这里写0，那样总费率计算佣金">
+                    <label for="FenZfbNewer">新会员提成点数</label>
+                    <input class="form-control" id="FenZfbNewer" type="text" placeholder="发展新会员返回给老会员点数，例如 0.2 那么平台所有在跑用户自己收益就是1.8-0.3-0.2等于1.3 ***如果是马商模式，这里写0，那样总费率计算佣金">
+                </div>
+                <div class="form-group" style="border:5px solid #52de77">
+
+                    <label for="FenWechatTotal">微信总费率</label>
+                    <input class="form-control" id="FenWechatTotal" type="text" placeholder="一共放出去的点数，比如 1.8 ***如果是马商模式，下面两个写0，那样总费率计算佣金">
+                    <label for="FenWechatAgent">代理提成点数</label>
+                    <input class="form-control" id="FenWechatAgent" type="text" placeholder="提成点数，例如 0.3">
+                    <label for="FenWechatbNewer">新会员提成点数</label>
+                    <input class="form-control" id="FenWechatNewer" type="text" placeholder="发展新会员返回给老会员点数，例如 0.2 那么平台所有在跑用户自己收益就是1.8-0.3-0.2等于1.3">
+                </div>
+                <div class="form-group" style="border:5px solid #f57777">
+
+                    <label for="FenJuheTotal">聚合码总费率</label>
+                    <input class="form-control" id="FenJuheTotal" type="text" placeholder="一共放出去的点数，比如 1.8 比如 1.8 ***如果是马商模式，下面两个写0，那样总费率计算佣金">
+                    <label for="FenJuheAgent">代理提成点数</label>
+                    <input class="form-control" id="FenJuheAgent" type="text" placeholder="提成点数，例如 0.3">
+                    <label for="FenJuheNewer">新会员提成点数</label>
+                    <input class="form-control" id="FenJuheNewer" type="text" placeholder="发展新会员返回给老会员点数，例如 0.2 那么平台所有在跑用户自己收益就是1.8-0.3-0.2等于1.3">
+                </div>
+                <div style="text-align: center;">
+                    <p style="margin:12px auto">
+                        <input type="checkbox" id="YesMaShang" name="YesMaShang"><label for="YesMaShang" ><span style="color:#000000">码商共享额度</span></label>
+                    </p>
+                    <button class="btn btn-secondary" id="addAgentUser">
+                        <span class="btn-label">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        确定添加
+                    </button>
+                </div>
+
+
+            </div>
+            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                <div class="card" style="width:100%;">
+
+                    <div class="table-responsive">
+                        <table id="maKu-datatables" class="display table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>账号</th>
+                                    <th>备注</th>
+                                    <th>密码</th>
+                                    <th>总金额</th>
+                                    <th>可用额</th>
+                                    <th>冻结</th>
+                                    <th>上级</th>
+                                    <th>总代</th>
+                                    <th>状态</th>
+                                    <th>用户类型</th>
+                                    <th>注册时间</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div class="tab-pane fade " id="pills-maku" role="tabpanel" aria-labelledby="pills-maku-tab">
+                <div class="card" style="width:100%;">
+
+                    <div class="table-responsive">
+                        <table id="bankOrders-datatables" class="display table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>单号</th>
+                                    <th>账号</th>
+                                    <th>金额</th>
+                                    <th>总金额</th>
+                                    <th>冻结金额</th>
+                                    <th>卡主</th>
+                                    <th>卡号</th>
+                                    <th>银行信息</th>
+                                    <th>状态</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+<input id="qrImgUpload" name="file" type="file" accept="image/*" multiple="multiple" class="dz-hidden-input" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;">
+
+
+<script src="~/Areas/Help/assets/js/mm/maAgent.js"></script>
+<script src="~/Areas/Help/assets/js/plugin/switch/honeySwitch.js"></script>
+<script>
+     //switch按钮
+    $(function () {
+
+        switchEvent("#directory", function () {
+            autoReload2 = 1;
+           
+
+            notifyMsg('flaticon-alarm-1', '提示', '打开自动刷新成功!', 'info');
+        }, function () {
+
+            autoReload2 = 0;
+            notifyMsg('flaticon-cross', '提示', '关闭自动刷新成功!', 'info');
+        });
+    });
+
+
+     //自动刷新
+    setInterval(function () {
+        if (autoReload2 == 1) {
+            loadBankData();
+            loadRunsData();
+        }
+    }, 15000);
+
+</script>

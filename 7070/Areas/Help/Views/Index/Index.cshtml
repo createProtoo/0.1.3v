@@ -1,0 +1,381 @@
+﻿
+@{
+    ViewBag.Title = "操作中心2020";
+    // Layout = null;
+    Layout = "~/Areas/Help/Views/Shared/_Layout.cshtml";
+}
+
+<h4 class="page-title">统计中心</h4>
+<div class="row">
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-stats card-primary card-round">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="flaticon-users"></i>
+                        </div>
+                    </div>
+                    <div class="col col-stats">
+                        <div class="numbers">
+                            <p class="card-category">今日总订单</p>
+                            <h4 id="tjTotalNums" class="card-title">0</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-stats card-info card-round">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="flaticon-interface-6"></i>
+                        </div>
+                    </div>
+                    <div class="col col-stats">
+                        <div class="numbers">
+                            <p class="card-category">今日有效单</p>
+                            <h4 id="tjTotalOkNums" class="card-title">0</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-stats card-success card-round">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="flaticon-analytics"></i>
+                        </div>
+                    </div>
+                    <div class="col col-stats">
+                        <div class="numbers">
+                            <p class="card-category">今日总流水</p>
+                            <h4 id="tjTotalMoney" class="card-title">￥ 0</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-stats card-secondary card-round">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="flaticon-success"></i>
+                        </div>
+                    </div>
+                    <div class="col col-stats">
+                        <div class="numbers">
+                            <p class="card-category">今日已付金额</p>
+                            <h4 id="tjTotalOkMoney" class="card-title">0</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Card With Icon States Color -->
+@{
+    if (ViewBag.Role != "RunManager")
+    {
+
+        <div class="row">
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body ">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="flaticon-chart-pie text-warning"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats">
+                                <div class="numbers">
+                                    <p class="card-category">手续费</p>
+                                    <h4 id="tjTotalHandMoney" class="card-title">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body ">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="flaticon-coins text-success"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats">
+                                <div class="numbers">
+                                    <p class="card-category">今日商户提现</p>
+                                    <h4 id="tjGiveShopMoney" class="card-title">￥ 0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="flaticon-alarm-1"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats">
+                                <div class="numbers">
+                                    <p class="card-category">可提额度</p>
+                                    <h4 id="tjLeaveShopMoney" class="card-title">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="flaticon-twitter text-primary"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats">
+                                <div class="numbers">
+                                    <p class="card-category">代理费</p>
+                                    <h4 id="tjAgentMoney" class="card-title">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+<!-- Row Card No Padding -->
+<div class="row row-card-no-pd">
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-stats card-round">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="flaticon-clock text-warning"></i>
+                        </div>
+                    </div>
+                    <div class="col col-stats">
+                        <div class="numbers">
+                            <p class="card-category">今日访问量</p>
+                            <h4 id="tjTotalVisitors" class="card-title">0</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-stats card-round">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="flaticon-alarm text-success"></i>
+                        </div>
+                    </div>
+                    <div class="col col-stats">
+                        <div class="numbers">
+                            <p class="card-category">出码成功</p>
+                            <h4 id="tjShowQrcodesNums" class="card-title">0</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-stats card-round">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="flaticon-dribbble text-danger"></i>
+                        </div>
+                    </div>
+                    <div class="col col-stats">
+                        <div class="numbers">
+                            <p class="card-category">出码失败</p>
+                            <h4 id="tjBadQrcodesNums" class="card-title">0</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-stats card-round">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="flaticon-like text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="col col-stats">
+                        <div class="numbers">
+                            <p class="card-category">综合成功率</p>
+                            <h4 id="tjOKNums" class="card-title">0</h4>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--成功率统计-->
+<div class="row row-card-no-pd">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-head-row">
+                    <h4 class="card-title">分时成功率(支付宝)</h4>
+                    <div class="card-tools">
+                        <button class="btn btn-icon btn-link btn-primary btn-xs"><span class="fa fa-angle-down"></span></button>
+                        <button class="btn btn-icon btn-link btn-primary btn-xs btn-refresh-card"><span class="fa fa-sync-alt"></span></button>
+                        <button class="btn btn-icon btn-link btn-primary btn-xs"><span class="fa fa-times"></span></button>
+                    </div>
+                </div>
+                <p class="card-category">
+                    Time sharing success rate statistics
+                </p>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive table-hover table-sales">
+                            <table class="table">
+                                <tbody id="tableAlipay">
+                                    <tr>
+                                        <td>
+                                            <div class="flag">
+                                                <img alt="indonesia" src="~/Areas/help/assets/img/flags/id.png">
+                                            </div>
+                                        </td>
+                                        <td>时间</td>
+                                        <td class="text-right">
+                                            成功/总数
+                                        </td>
+                                        <td class="text-right">
+                                            支付率
+                                        </td>
+                                    </tr>
+                                    
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--成功率统计-->
+<div class="row row-card-no-pd">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-head-row">
+                    <h4 class="card-title">分时成功率(云闪付)</h4>
+                    <div class="card-tools">
+                        <button class="btn btn-icon btn-link btn-primary btn-xs"><span class="fa fa-angle-down"></span></button>
+                        <button class="btn btn-icon btn-link btn-primary btn-xs btn-refresh-card"><span class="fa fa-sync-alt"></span></button>
+                        <button class="btn btn-icon btn-link btn-primary btn-xs"><span class="fa fa-times"></span></button>
+                    </div>
+                </div>
+                <p class="card-category">
+                    Time sharing success rate statistics
+                </p>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive table-hover table-sales">
+                            <table class="table">
+                                <tbody id="tableUnionpay">
+                                    <tr>
+                                        <td>
+                                            <div class="flag">
+                                                <img alt="indonesia" src="~/Areas/help/assets/img/flags/id.png">
+                                            </div>
+                                        </td>
+                                        <td>时间</td>
+                                        <td class="text-right">
+                                            成功/总数
+                                        </td>
+                                        <td class="text-right">
+                                            支付率
+                                        </td>
+                                    </tr>
+                                   
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Custom template | don't include it in your project! -->
+<div class="custom-template">
+    <div class="title">Settings</div>
+    <div class="custom-content">
+        <div class="switcher">
+            <div class="switch-block">
+                <h4>Topbar</h4>
+                <div class="btnSwitch">
+                    <button type="button" class="changeMainHeaderColor" data-color="blue"></button>
+                    <button type="button" class="selected changeMainHeaderColor" data-color="purple"></button>
+                    <button type="button" class="changeMainHeaderColor" data-color="light-blue"></button>
+                    <button type="button" class="changeMainHeaderColor" data-color="green"></button>
+                    <button type="button" class="changeMainHeaderColor" data-color="orange"></button>
+                    <button type="button" class="changeMainHeaderColor" data-color="red"></button>
+                </div>
+            </div>
+            <div class="switch-block">
+                <h4>Background</h4>
+                <div class="btnSwitch">
+                    <button type="button" class="changeBackgroundColor" data-color="bg2"></button>
+                    <button type="button" class="changeBackgroundColor selected" data-color="bg1"></button>
+                    <button type="button" class="changeBackgroundColor" data-color="bg3"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="custom-toggle">
+        <i class="flaticon-settings"></i>
+    </div>
+</div>
+<!-- End Custom template -->

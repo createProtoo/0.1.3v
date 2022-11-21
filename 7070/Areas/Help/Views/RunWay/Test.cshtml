@@ -1,0 +1,315 @@
+﻿
+@{
+    ViewBag.Title = "Test";
+    Layout = null;
+}
+@*<script src="~/Areas/Help/assets/js/plugin/dropzone/dropzone.min.js"></script>*@
+<link href="~/Areas/Help/assets/js/dropzone2020/basic.min.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/dropzone2020/dropzone.min.css" rel="stylesheet" />
+<script src="~/Areas/Help/assets/js/polyfill.min.js"></script>
+
+<script src="~/Areas/Help/assets/js/dropzone2020/dropzone.min.js"></script>
+<script src="~/Areas/Help/assets/js/dropzone2020/dropzone-amd-module.min.js"></script>
+<link href="~/Areas/Help/assets/css/My.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/plugin/dialog/css/normalize.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/plugin/dialog/css/demo.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/plugin/dialog/css/dialog.css" rel="stylesheet" />
+
+<link href="~/Areas/Help/assets/js/plugin/dialog/css/dialog-donna.css" rel="stylesheet" />
+
+<style>
+    .dz-success-mark {
+        display: none;
+    }
+
+    .dz-error-mark {
+        display: none;
+    }
+</style>
+
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">码库管理</div>
+    </div>
+    <div class="card-body">
+        <ul class="nav nav-pills nav-secondary" id="pills-tab" role="tablist">
+
+            <li class="nav-item submenu">
+                <a class="nav-link  active show" id="pills-profile-tab" role="tab" aria-selected="true" aria-controls="pills-profile" href="#pills-profile" data-toggle="pill">上传码</a>
+            </li>
+            <li class="nav-item submenu">
+                <a class="nav-link" id="pills-contact-tab" role="tab" aria-selected="false" aria-controls="pills-contact" href="#pills-contact" data-toggle="pill">码儿列表</a>
+            </li>
+
+            <li class="nav-item submenu">
+                <a class="nav-link" id="pills-maku-tab" role="tab" aria-selected="false" aria-controls="pills-maku" href="#pills-maku" data-toggle="pill">上传银卡</a>
+            </li>
+
+        </ul>
+        <div class="tab-content mt-2 mb-3" id="pills-tabContent">
+
+            <div class="tab-pane fade active show" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+
+                <div class="form-group">
+                    <label>码类型【银卡类型】</label>
+                    <select id="maType" name="maType" class="form-control input-fixed" style="width: 100%;">
+                        <option value="-1">--请选择码类型--</option>
+                        <option value="alipay1">支付宝实时码</option>
+                        <option value="unionpayH5">云闪付H5</option>
+
+                        @*<option value="alipay2">支付宝1次金额码</option>
+                            <option value="alipay3">支付宝2次金额码</option>
+                            <option value="wechat1">微信1次码</option>
+                            <option value="wechat2">微信2次码</option>
+                            <option value="unionpayH4">云闪付复制转账</option>
+                            <option value="zhanBeiH5">赞呗H5</option>
+                            <option value="juHeH4">聚合码（银行码）</option>*@
+
+                    </select>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input id="qrH5" class="form-check-input" type="checkbox" value="qrH5">
+                        <span class="form-check-sign">H5拉起(请勿选择错误)</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>账号</label>
+                    <input class="form-control" id="maUid" type="text" placeholder="***只能全部数字,且不能重复,特别注意...">
+                    <label>密码</label>
+                    <input class="form-control" id="maPwd" type="text" placeholder="协议码(比如赞呗)使用,其他码可不填写...">
+
+                </div>
+                <div class="form-group">
+                    <label>姓名(备注)</label>
+                    <input class="form-control" id="maName" type="text" placeholder="请输入真实名字,有的时候需要验证姓名...">
+                </div>
+                <div class="form-group">
+                    <label>每日限额</label>
+                    <input class="form-control" id="maXianEr" type="number" placeholder="请输入整数字...">
+                </div>
+
+                <div class="form-group">
+                    <label>每小时出码频率</label>
+                    <input class="form-control" id="maXiaoShi" type="number" placeholder="请输入数字...">
+                </div>
+                <div class="form-group">
+                    <label>每日出码频率</label>
+                    <input class="form-control" id="maYiRi" type="number" placeholder="请输入数字...">
+                    <label>连续多少笔未付下架</label>
+                    <input class="form-control" id="maXiaJia" type="number" value="6" placeholder="默认6笔未支付就下架...">
+                </div>
+                <div onclick="add_Qrcode(); delPic()" style="text-align:center">
+                    <button class="btn btn-secondary">
+                        <span class="btn-label">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        确定添加
+                    </button>
+                </div>
+                <h1 class="myGreen">*实时码请勿上传,下面传码请忽略...</h1>
+                <div class="form-group">
+                    <label id="qrContent">解析结果:待解析</label>
+
+                </div>
+                <div class="card-body">
+                    <form id="qrUpload" action="~/Help/RunWay/Add" class="dropzone">
+
+                        <div class="dz-message" data-dz-message="">
+                            <div class="icon">
+                                <i class="far fa-images"></i>
+                            </div>
+                            <h4 class="message">拖拽 或 点击 上传图片</h4>
+                            <div class="note">(请勿上传其他非图片格式.请勿 <strong>重复</strong> 上传同一文件.)</div>
+                        </div>
+
+                    </form>
+                </div>
+
+
+
+            </div>
+            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                <div class="card" style="width:100%;">
+
+                    <div class="table-responsive">
+                        <table id="maKu-datatables" class="display table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>编号</th>
+                                    <th>通道</th>
+                                    <th>UID</th>
+                                    <th>类型</th>
+                                    <th>名字</th>
+                                    <th>时用</th>
+                                    <th>日用</th>
+                                    <th>失败</th>
+                                    <th>操作</th>
+                                    <th>状态</th>
+                                    <th>创建时间</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div class="tab-pane fade " id="pills-maku" role="tabpanel" aria-labelledby="pills-maku-tab">
+                <div class="form-group">
+                    <label>【银卡类型】</label>
+                    <select id="maType02" name="maType02" class="form-control input-fixed" style="width: 100%;">
+                        <option value="-1">--请选银行类型--</option>
+                        <option value="自己">自己填写</option>
+                        <option value="农业">农业银行</option>
+                        <option value="工商">工商银行</option>
+                        <option value="建设">建设银行</option>
+                        <option value="交通">交通银行</option>
+                        <option value="邮政">邮政储蓄</option>
+                        <option value="中国银行">中国银行</option>
+                        <option value="浦发">浦发银行</option>
+                        <option value="广发">广发银行</option>
+                        <option value="平安">平安银行</option>
+                        <option value="中信">中信银行</option>
+                        <option value="兴业">兴业银行</option>
+                        <option value="民生">民生银行</option>
+                        <option value="招商">招商银行</option>
+                        <option value="光大">光大银行</option>
+                        <option value="华夏">华夏银行</option>
+                        <option value="浙商">浙商银行</option>
+                        <option value="恒丰">恒丰银行</option>
+
+                    </select>
+                </div>
+                <div id="mySayBankDiv" class="form-group" style="display:none" >
+                    <label><span style="color:seagreen">【自定义银行类型】</span></label>
+                    <input class="form-control" id="mySayBank" type="text" placeholder="***请认真填写，银行简称就可以了...">
+
+                </div>
+
+                <div class="form-group">
+                    <label>【银行卡号】</label>
+                    <input class="form-control" id="maUid02" type="text" placeholder="***只能全部数字,特别注意...">
+                    <label>【银行开户行】</label>
+                    <input class="form-control" id="maPwd02" type="text" placeholder="请按实际开户行地址填写...">
+
+                </div>
+                <div class="form-group">
+                    <label>【银卡姓名】</label>
+                    <input class="form-control" id="maName02" type="text" placeholder="请输入真实名字,有的时候需要验证姓名...">
+                </div>
+                <div class="form-group">
+                    <label>每日限额</label>
+                    <input class="form-control" id="maXianEr02" type="number" placeholder="请输入整数字...">
+                </div>
+
+                <div class="form-group">
+                    <label>每小时出码频率</label>
+                    <input class="form-control" id="maXiaoShi02" type="number" placeholder="请输入数字...">
+                </div>
+                <div class="form-group">
+                    <label>每日出码频率</label>
+                    <input class="form-control" id="maYiRi02" type="number" placeholder="请输入数字...">
+                    <label>连续多少笔未付下架</label>
+                    <input class="form-control" id="maXiaJia02" type="number" value="6" placeholder="默认6笔未支付就下架...">
+                </div>
+                <div onclick="add_KaCode()" style="text-align:center">
+                    <button class="btn btn-secondary">
+                        <span class="btn-label">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        确定添加
+                    </button>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+<input id="qrImgUpload" name="file" type="file" accept="image/*" multiple="multiple" class="dz-hidden-input" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;">
+
+<script>
+    var Gobal_Qr = '';
+    /*window.Dropzone.options.qrUpload = {
+        paramName: "file",
+        init: function () {
+            //上传文件时触发的事件
+            *//*this.on("addedfile", function (file) {
+       // Gobal_QrPath = file.name;//全局名字
+                   //浏览器控制台输出js
+         // console.log("File " + file.name + "uploaded");
+               });*//*
+//上传文件成功时触发的事件
+this.on("success", function (file, data) {
+
+Gobal_Qr = data;//全局名字
+//  console.log("长传成功: " + file.name);
+console.log("返回数据 " + data);
+$("#qrContent").html(new Date().toLocaleString() + ' 解析结果: ' + Gobal_Qr);
+});
+
+}
+};*/
+    jQuery(function ($) {
+        Dropzone.autoDiscover = false;
+        Dropzone.options.myAwesomeDropzone = false;
+        try {
+            $(".dropzone").dropzone({
+                paramName: "file",
+                thumbnailWidth: "350",
+                thumbnailHeight: "630",
+
+                acceptedFiles: ".jpg,.png,.jpeg",
+                init: function () {
+                    //上传文件时触发的事件
+                    this.on("addedfile", function (file) {
+                        delPic();
+                        $('.dz-image-preview').last().attr({ width: '350', height: '630' });
+                        $('.dz-image').last().find('img').attr({ width: '350', height: '630' });
+                        // Gobal_QrPath = file.name;//全局名字
+                        //浏览器控制台输出js
+                        // console.log("File " + file.name + "uploaded");
+                    });
+                    //上传文件成功时触发的事件
+                    this.on("success", function (file, data) {
+                        $('.dz-message').hide();
+
+                        Gobal_Qr = data;//全局名字
+                        //  console.log("长传成功: " + file.name);
+                        console.log("返回数据 " + data);
+                        $("#qrContent").html(new Date().toLocaleString() + ' 解析结果: ' + Gobal_Qr);
+                    });
+
+                }
+            });
+        } catch (e) {
+            alert('浏览器太旧了，请更换谷歌浏览器!' + e);
+        }
+    });
+    function delPic() {
+        $("#qrContent").html('');
+        $('.dz-image-preview').remove();
+    }
+
+</script>
+
+
+
+<script src="~/Areas/Help/assets/js/mm/maKU.js"></script>

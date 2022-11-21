@@ -1,0 +1,45 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TestH5</title>
+</head>
+<body>
+    <div> 
+        <input type="text" id="testH5"  style="width:80%" />
+        <button id="testH5Ok">测试</button>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/App/jquery.min.js"></script>
+<script>
+    
+$(function () {
+
+
+
+    $(document).on("click", "#testH5Ok", function () {
+        var tmpUrl = $('#testH5').val();
+        alert(tmpUrl);
+
+        var okUrl = 'alipays://platformapi/startapp?appId=20000691&url=' + tmpUrl;   //60000029     20000691
+       location.replace(okUrl);
+      
+    })
+
+
+ 
+   
+
+
+
+  
+
+}); //end
+</script>

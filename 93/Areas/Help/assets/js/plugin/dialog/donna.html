@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Dialog Effects | Donna</title>
+	<meta name="description" content="A Collection of Dialog Effects" />
+	<meta name="keywords" content="dialog, effect, modal, overlay, animation, web design" />
+	<meta name="author" content="Codrops" />
+
+	<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="css/demo.css" />
+	<!-- common styles -->
+	<link rel="stylesheet" type="text/css" href="css/dialog.css" />
+	<!-- individual effect -->
+	<link rel="stylesheet" type="text/css" href="css/dialog-donna.css" />
+	<script src="js/modernizr.custom.js"></script>
+</head>
+	<body>
+
+
+ 
+
+
+		<div class="container">
+			<div class="content">
+			
+					
+					<div class="button-wrap"><button data-dialog="somedialog" class="trigger">Open Dialog2020</button></div>
+				
+				<div id="somedialog" class="dialog">
+					<div class="dialog__overlay"></div>
+					<div class="dialog__content">
+						<h2><strong>Howdy</strong>, I'm a dialog box</h2><div><button class="action" data-dialog-close>Close</button></div>
+					</div>
+				</div>
+				
+			</div><!-- /content -->
+		</div><!-- /container -->
+		
+		
+		
+		<script src="js/classie.js"></script>
+		<script src="js/dialogFx.js"></script>
+		<script>
+			(function() {
+
+				var dlgtrigger = document.querySelector( '[data-dialog]' ),
+					somedialog = document.getElementById( dlgtrigger.getAttribute( 'data-dialog' ) ),
+					dlg = new DialogFx( somedialog );
+
+				dlgtrigger.addEventListener( 'click', dlg.toggle.bind(dlg) );
+
+			})();
+		</script>
+	</body>
+</html>

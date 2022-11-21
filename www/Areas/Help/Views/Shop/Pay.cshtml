@@ -1,0 +1,140 @@
+﻿<div style="text-align:center;margin-bottom:59px">
+    <h1 class="myOrangered">提现中心</h1>
+</div>
+<div>
+    <h2 style="display:inline;margin-right:38px" class="text-muted page-title">总金额: ￥ <span id="payOKLbl">-</span></h2>
+    <h2 style="display:inline;margin-right:38px" class="myDark  myMargin">手续费: ￥ <span id="payHandbl">-</span></h2>
+    <h2 style="display:inline;margin-right:38px" class="text-muted page-title">已提现: ￥ <span id="payOutLbl">-</span></h2>
+
+    <h2 style="display:inline;margin-right:38px;color:red" class="text-danger page-title myMargin ">可提现 ￥ <span id="payLeaveLbl">-</span></h2>
+
+    <hr />
+</div>
+<h1 class="text-danger page-title myMargin">
+    *申请提现是必须手续,否则不放款!收款账号信息,请到群里联系财务再次核实...
+</h1>
+@*<div class="form-group">
+    <label for="ShopMoney">银行类型:</label>
+    <select name="sltBankKind" class="form-control input-fixed" id="sltBankKind" style="width: 100%;">
+        <option value="-1">--请选择收账银行--</option>
+        <option value="jianshe">建设银行</option>
+        <option value="nongye">农业银行</option>
+        <option value="jiaotong">交通银行</option>
+        <option value="gongshang">工商银行</option>
+        <option value="xingye">兴业银行</option>
+        <option value="zhongxin">中信银行</option>
+        <option value="pingan">平安银行</option>
+
+    </select>
+</div>*@
+<div class="form-group">
+    <label for="bankAddress">开户行:</label>
+    <input class="form-control" id="bankAddress" type="text" placeholder="例：上海交通银行人民路支行  *部分小众银行不支持...">
+</div>
+<div class="form-group">
+    <label for="bankCardNo">银行卡号:</label>
+    <input class="form-control" id="bankCardNo" type="number" placeholder="请多次核对勿输错...">
+</div>
+<div class="form-group">
+    <label for="ShopMoney">持卡人:</label>
+    <input class="form-control" id="bankOwner" type="text" placeholder="请勿输错...">
+</div>
+<div class="form-group">
+    <label for="ShopMoney">提现金额(元):</label>
+    <input class="form-control" id="ShopMoney" type="number" placeholder="请勿超过可提现金额...">
+</div>
+<div class="form-group">
+    <label for="ShopPassWord">二次密码验证:</label>
+    <input class="form-control" id="ShopPassWord" type="password" placeholder="请输入提现密码,非登录密码...">
+</div>
+<div style="text-align:center">
+    <button class="btn btn-secondary" id="shopGetMoney">
+        <span class="btn-label">
+            <i class="fa fa-plus"></i>
+        </span>
+        申请提现
+    </button>
+</div>
+
+
+<!--核心样式-->
+<link rel="stylesheet" href="~/Areas/Help/assets/css/modallayer.min.css">
+
+<!--插件-->
+<script src="~/Areas/Help/assets/js/modallayer-ie.min.js"></script>
+
+@{
+    if (ViewBag.SetPwd2 == 1)
+    {
+        <script>
+
+            var option = {
+                title: '请设置提现安全密码:',
+                popupTime: 0,
+                hook: {
+                    initStart: function () {
+                        // 检查之前老旧实例如果存在则销毁
+                        if (document.querySelector('#modal-layer-container'))
+                            ModalLayer.removeAll();
+                    }
+                },
+                displayProgressBar: true,
+                displayProgressBarColor: 'red',
+                displayProgressBarPos: 'right',
+                content: '<input type="text" style="width: calc(100% - 2px); height: 24px; font-size: 16px; color: red;" placeholder="请输入提现密码!不可外泄...">',
+                okText: '提交',
+                noText: '取消',
+                callback: {
+                    ok: function () {
+
+                        var pwd2= this.getNodes().container.querySelector('input').value;
+                        this.hide();
+
+                        hub.server.updatePwd2(pwd2).done(function (result) {
+                            //window.Android.showToast('点击返回：' + okResult);
+                            if (result == 1) {
+                                alert("设置成功！请牢记,勿外泄!不可更改...");
+
+
+
+                            } else {
+                                alert("设置失败！");
+                            }
+
+                        }).fail(function (err) {
+                            alert('错误：' + err);
+                        });
+
+                    },
+                }
+            };
+
+            ModalLayer.prompt(option);
+
+        </script>
+
+    }
+
+}
+
+<script>
+
+
+
+    hub.server.shopGiveAllInfo().done(function (result) {
+        var data = $.parseJSON(result);
+        if (data != null) {
+
+            $('#payOKLbl').html(data.d1);
+            $('#payHandbl').html(data.d2);
+            $('#payOutLbl').html(data.d3);
+            $('#payLeaveLbl').html(data.d4);
+            $('#ShopMoney').val(data.d4);
+
+        }
+
+    }).fail(function (err) {
+        alert('错误：' + err);
+    });
+
+</script>

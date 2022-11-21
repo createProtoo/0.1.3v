@@ -1,0 +1,769 @@
+﻿@{
+    ViewBag.Title = "Test";
+    Layout = null;
+}
+@*<script src="~/Areas/Help/assets/js/plugin/dropzone/dropzone.min.js"></script>*@
+<link href="~/Areas/Help/assets/js/dropzone2020/basic.min.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/dropzone2020/dropzone.min.css" rel="stylesheet" />
+<script src="~/Areas/Help/assets/js/polyfill.min.js"></script>
+<script src="~/Areas/Help/assets/js/dropzone2020/dropzone.min.js"></script>
+<script src="~/Areas/Help/assets/js/dropzone2020/dropzone-amd-module.min.js"></script>
+<script src="~/Areas/Help/assets/js/jquery.qrcode.js"></script>
+<link href="~/Areas/Help/assets/css/My.css" rel="stylesheet" />
+<style>
+    .dz-success-mark {
+        display: none;
+    }
+    .dz-image-preview{
+        width:350px;
+        height:630px;
+
+    }
+    .dz-image{
+        width:350px;
+        height:630px;
+
+    }
+    .dz-error-mark {
+        display: none;
+    }
+
+    html, body {
+        overflow-x: auto;
+        width: 1600px;
+    }
+
+    .optli {
+        border: 4px solid blue;
+        width: 308px;
+    }
+</style>
+<div style="margin:20px 20px 0px 20px">
+    <h1 style="color: cornflowerblue">
+        用户：<span style="color:chartreuse">@ViewBag.UserID</span>
+    </h1>
+    <label><span style=" color: darkgreen; margin-left: 13px">今日业绩：</span> <span id="totalBill" style="color:black">￥ 0</span></label>
+    @*<label><span style="color:darkgreen;margin-left:13px">花呗：</span><span id="totalHuabei" style="color:black">￥ 0</span></label>
+        <label><span style="color:darkgreen;margin-left:13px">微信：</span> <span id="totalWechat" style="color:black">￥ 0</span></label>
+        <label><span style="color:darkgreen;margin-left:13px">支付宝：</span> <span id="totalAlipay" style="color:black">￥ 0</span></label>
+        <label><span style="color: darkgreen; margin-left: 13px">聚合码：</span> <span id="totalJuhe" style="color:black">￥ 0</span></label>*@
+</div>
+<div class="card-body">
+    <ul class="nav nav-pills nav-secondary" id="pills-tab" role="tablist">
+
+        <li class="nav-item submenu">
+            <a class="nav-link  active show" id="pills-profile-tab" role="tab" aria-selected="true" aria-controls="pills-profile" href="#pills-profile" data-toggle="pill">拉卡区</a>
+        </li>
+        <li class="nav-item submenu">
+            <a onclick="javascript:{whichOderCmd = 1;OrdersPage2020();}" class="nav-link" id="pills-contact-tab" role="tab" aria-selected="false" aria-controls="pills-contact" href="#pills-contact" data-toggle="pill">订单列表</a>
+        </li>
+
+        @*<li class="nav-item submenu">
+                <a class="nav-link" id="pills-maku-tab" role="tab" aria-selected="false" aria-controls="pills-maku" href="#pills-maku" data-toggle="pill">上传银卡</a>
+            </li>*@
+
+    </ul>
+    <div class="tab-content mt-2 mb-3" id="pills-tabContent">
+
+        <div class="tab-pane fade active show" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+
+            <div style="display:block;">
+
+
+                <div>
+                    <div style="float:left;margin-right:60px">
+                        <div style="margin: 5px 0px 0px;  height: 60px; font-size: large;">
+                            <label><span style="color:red">请选择类型：</span></label>
+                            <select style="display:inline" class="form-control input-fixed" name="sltBankKind" id="sltBankKind">
+                                <option value="随机">随机拉取银卡</option>
+                                <option value="农业">农业银行</option>
+                                <option value="工商">工商银行</option>
+                                <option value="建设">建设银行</option>
+                                <option value="交通">交通银行</option>
+                                <option value="邮政">邮政储蓄</option>
+                                <option value="中国银行">中国银行</option>
+                                <option value="浦发">浦发银行</option>
+                                <option value="广发">广发银行</option>
+                                <option value="平安">平安银行</option>
+                                <option value="中信">中信银行</option>
+                                <option value="兴业">兴业银行</option>
+                            </select>
+                            <button id="getBankCard" style="display: inline;" class="btn btn-default ">开始拉卡</button>
+
+                        </div>
+                        <div>
+                            <input id="searchInfo" style="height:35px" type="text" placeholder="请输入卡号/姓名..." />
+                            <button id="searchBankCard" style="display: inline;" class="btn btn-danger">搜索</button>
+
+                            <ul id="lastList2">
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div style="float:left">
+                        <div style="float:left;">
+                            <div style="margin: -20px 0px 0px; width: 100%; height: 13%; font-size: large;">
+                                <div class="form-group">
+                                    <label id="qrContent2"><span style="color:orangered;font-size:1.6em">请上传支付凭证</span> </label>
+                                    <span id="bankSltInfo" style="display:block;color:red;font-weight:700"></span>
+                                </div>
+                                <div class="card-body">
+                                    <form id="qrUpload" action="~/Help/shop/AddCardPingZheng" class="dropzone">
+
+                                        <div class="dz-message" data-dz-message="">
+                                            <div class="icon">
+                                                <i class="far fa-images"></i>
+                                            </div>
+                                            <h4 class="message">拖拽 或 点击 上传图片</h4>
+                                            <div class="note">(请勿上传其他非图片格式.请勿 <strong>重复</strong> 上传同一文件.)</div>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                                <input id="qrImgUpload" name="file" type="file" accept="image/*" multiple="multiple" class="dz-hidden-input" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;">
+
+
+                            </div>
+
+                        </div>
+                        <div style="float: left; margin-top: 50px;margin-right:50px">
+                            <span style="color:red;display: block; margin-bottom: 20px;color:mediumvioletred">请输入凭证金额:</span>
+
+                            <input id="okPayQrNum" style="display: block; margin-bottom: 20px;height:35px" />
+
+                            <button id="okPaySend" style="display:block;margin-bottom:20px;margin-top:120px" class="btn btn-warning">信息无误，确认提交</button>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+            <div id="content2020" class="page-inner">
+                <!-- 开始的地方 -->
+                <!-- 结束的地方 -->
+            </div>
+        </div>
+
+        <div class="tab-pane fade " id="pills-maku" role="tabpanel" aria-labelledby="pills-maku-tab">
+            cccdd
+        </div>
+
+
+
+
+    </div>
+
+</div>
+
+
+
+
+<script>
+    var Gobal_Qr = '';
+    var Gobal_OkOrderStrs = '';
+    jQuery(function ($) {
+        Dropzone.autoDiscover = false;
+        Dropzone.options.myAwesomeDropzone = false;
+        try {
+            $(".dropzone").dropzone({
+                paramName: "file",
+                thumbnailWidth: "350",
+                thumbnailHeight: "630",
+
+                acceptedFiles: ".jpg,.png,.jpeg",
+                init: function () {
+                    //上传文件时触发的事件
+                    this.on("addedfile", function (file) {
+                        delPic();
+                        $('.dz-image-preview').last().attr({ width: '350', height: '630' });
+                         $('.dz-image').last().find('img').attr({ width: '350', height: '630' });
+                        // Gobal_QrPath = file.name;//全局名字
+                        //浏览器控制台输出js
+                        // console.log("File " + file.name + "uploaded");
+                    });
+                    //上传文件成功时触发的事件
+                    this.on("success", function (file, data) {
+                        $('.dz-message').hide();
+                        
+                        Gobal_Qr = data;//全局名字
+                        //  console.log("长传成功: " + file.name);
+                        console.log("返回数据 " + data);
+                        // $("#qrContent").html('现在北京时间：' + new Date().toLocaleString() + ' <span style="color:red"> *解析结果:<span> ' + Gobal_Qr);
+                    });
+
+                }
+            });
+        } catch (e) {
+            alert('浏览器太旧了，请更换谷歌浏览器!'+e);
+        }
+    });
+    function delPic() {
+        // $("#qrContent").html('');
+        $('.dz-image-preview').remove();
+        $('.dz-message').show();
+    }
+
+    //拉取银行卡
+    $("#getBankCard").off('click').on("click", function () {
+        try {
+            var bankType = $('#sltBankKind').val();
+            hub.server.getBankCard(bankType).done(function (result) {
+                try {
+                    //alert(result);
+                    var data = $.parseJSON(result);
+                    var tmpStr = '<div style="background-image:url(/images/bank.png);background-size:cover ;width:300px;height:185px">' +
+                        '<span style="display:block; color:white;font-size:1.3em;font-weight:600;padding:3px 30px 10px 20px">' + data.maPwd + ' </span>' +
+                        '<span style="display:block; color:green;font-size:1.6em;font-weight:800;padding:63px 30px 10px 50px">' + data.maUid + '</span>' +
+                        '<span style="display:block; color:red;font-size:1.6em;font-weight:800;padding:3px 30px 10px 80px">' + data.maName + '</span>' +
+                        '</div>'
+
+                    $("#lastList2").prepend("<li data-name=" + data.maName + " data-bank=" + data.maPwd + " data-bankno=" + data.maUid + ">" + tmpStr + "</li>");
+
+                } catch (e) {
+                    alert(result);
+                }
+
+
+
+            })
+        } catch (e) {
+            xtip.alert('抱歉，连接丢失或者异常，请刷新本页面！');
+        }
+
+    })
+    //搜索银行卡
+    $("#searchBankCard").off('click').on("click", function () {
+        try {
+            var bankInfo = $('#searchInfo').val();
+            hub.server.searchBankCard(bankInfo).done(function (result) {
+                try {
+                    //alert(result);
+                    var data = $.parseJSON(result);
+                    var tmpStr = '<div style="background-image:url(/images/bank.png);background-size:cover ;width:300px;height:185px">' +
+                        '<span style="display:block; color:white;font-size:1.3em;font-weight:600;padding:3px 30px 10px 20px">' + data.maPwd + ' </span>' +
+                        '<span style="display:block; color:green;font-size:1.6em;font-weight:800;padding:63px 30px 10px 50px">' + data.maUid + '</span>' +
+                        '<span style="display:block; color:red;font-size:1.6em;font-weight:800;padding:3px 30px 10px 80px">' + data.maName + '</span>' +
+                        '</div>'
+
+                    $("#lastList2").prepend("<li data-name=" + data.maName + " data-bank=" + data.maPwd + " data-bankno=" + data.maUid + ">" + tmpStr + "</li>");
+
+                } catch (e) {
+                    alert(result);
+                }
+
+
+
+            })
+        } catch (e) {
+            xtip.alert('抱歉，连接丢失或者异常，请刷新本页面！');
+        }
+
+    })
+
+
+    //检查时间是否合法
+    function IsValidDate(DateStr) {
+        var sDate = DateStr.replace(/(^\s+|\s+$)/g, '');//去两边空格;
+        if (sDate == '') {
+            return true;
+        }
+    }
+    //提交订单
+    $("#okPaySend").off('click').on("click", function () {
+
+        var okImgUrl2 = Gobal_Qr;
+        var okBankInfo2 = $('#bankSltInfo').html();
+        var okPayMoney2 = $('#okPayQrNum').val();
+        
+        //alert(okImgUrl);
+       // alert(okBankInfo);
+       // alert(okPayMoney);
+        var okPrams = {okImgUrl:okImgUrl2,okBankInfo:okBankInfo2,okPayMoney:okPayMoney2};
+
+
+        hub.server.workerSendPayBillInfo2(okPrams).done(function (result) {
+            //window.Android.showToast('点击返回：' + okResult);
+
+            if (result == 'ok') {
+                alert("提交成功，恭 喜喜 ！");
+
+                delPic();
+                $("#qrContent").html('<span style="color:orangered">解析结果:待解析</span>');
+                $('#okPayQrNum').val('');
+
+
+
+            } else {
+                alert("提交失败,失败原因:" + result);
+            }
+
+        }).fail(function (err) {
+            alert('错误：' + err);
+        });
+
+    })
+
+    function getQR(needQrStr, qrStr) {
+        $("#QRcodediv").empty().qrcode({
+            width: 300,
+            height: 300,
+            text: needQrStr,//data.qrcode,
+            type: qrStr,
+            content: '*请勿重复扫码，不到账不退款',
+            imgWidth: 120,
+            imgHeight: 120
+        });
+        $("#QRcodediv").show();
+        $('#nowQrcodeUrl').hide();
+    }
+
+
+
+    function getNeedQrcode(kindQr) {
+        var hiDate = { OrderType: kindQr };
+        $.ajax({
+            url: "/api/payByWorker",
+            type: "post",
+            data: hiDate,
+            cache: false,
+            success: function (data) {
+                // clearPoints();
+                // $('#canvas').attr('style', 'position:absolute');
+
+                var dataOK = $.parseJSON(data);
+                // alert(dataOK.codeState);
+                if (dataOK.codeState != 'ok') {
+
+                    $('#nowQrcodeUrl').attr('src', ' /images/qrcodeBank.jpg');
+                    $("#QRcodediv").hide();
+                    $('#nowQrcodeUrl').show();
+                    alert(dataOK.codeState);
+
+                    return;
+                }
+                // $('#okPayQrNum').val(dataOK.OrderRemark.substr(dataOK.OrderRemark.length - 6));
+                getQR(dataOK.OrderUrl, dataOK.OrderRemark);
+
+                // alert(dataOK.OrderUrl);
+                // $('#nowQrcodeUrl').attr('src', 'http://qr.liantu.com/api.php?&bg=ffffff&fg=cc0000&text=' + dataOK.OrderUrl);
+                //CVString('sury001');
+
+                // $("#content").empty();
+                //  $("#content").append(data);
+                //点击事件
+                //$("#first").click();
+
+
+            }
+        });
+
+    }
+
+    $(function () {
+
+        $("#lastList2").on("click","li",  function () {
+
+            $(this).siblings('li').removeClass('optli');  // 删除其他li元素的样式
+
+            $(this).addClass('optli');                            // 添加当前元素的样式
+            handleScrollTop();
+            // 移动到顶部
+            var cur_li = $('.optli');
+            var first_li = $('#lastList2 li').eq(0);
+            first_li.before(cur_li);
+
+            var t = cur_li.attr("data-name");
+            var t1 = cur_li.attr("data-bankno");
+            var t2 = cur_li.attr("data-bank");
+            $('#bankSltInfo').html('' + t + ' ' + t1 + ' ' + t2)
+
+
+
+        });
+
+    });
+
+    //更新Worker今日信息
+    setInterval(function () {
+
+        try {
+
+            hub.server.shopWorkerTodayInfo().done(function (result) {
+
+                //  alert(result);
+                var data = $.parseJSON(result);
+                // alert(data.malists[0]);
+                //$("#lastList").empty();
+                //for (var i = 0; i < data.malists.length; i++) {
+                //    $("#lastList").append("<li>" + data.malists[i] + "</li>");
+                //}
+
+                $("#totalBill").html('￥ ' + data.totalBill);
+
+                //$("#totalAlipay").html('￥ ' + data.alipay);
+                //$("#totalWechat").html('￥ ' + data.wechat);
+                //$("#totalHuabei").html('￥ ' + data.huabei);
+                //$("#totalJuhe").html('￥ ' + data.juhe);
+
+            })
+        } catch (e) {
+            xtip.alert('抱歉，连接丢失或者异常，请刷新本页面！');
+        }
+
+
+
+    }, 15000);
+
+    function handleScrollTop() {
+        // scrollTo(0, 0);
+        document.documentElement.scrollTop = document.body.scrollTop = 0;
+    }
+
+    //清理画布
+    function clearPoints() {
+        var canvas = $("#canvas");
+        if (canvas != null) {
+            try {
+                var ctx = canvas[0].getContext("2d");
+                ctx.clearRect(0, 0, canvas.width(), canvas.height());
+
+            } catch (e) {
+
+            }
+
+        }
+    }
+    function CVString(msgStr)//画出文字
+    {
+        try {
+            /* var canvas = $("#canvas");
+             var context = canvas[0].getContext("2d");
+             context.font = "20px Georgia"; //设置样式
+             context.fillStyle = "blue";
+             context.fillText(msgStr, 120, 160);
+      */
+            var c = document.getElementById("canvas");
+            var ctx = c.getContext("2d");
+            //ctx.fillRect(110,110,100,30);
+
+
+            ctx.font = "23px 黑体";
+            // Create gradient
+            // var gradient = ctx.createLinearGradient(0, 0, c.width, 0);
+            // gradient.addColorStop("0", "magenta");
+            // gradient.addColorStop("0.5", "blue");
+            // gradient.addColorStop("1.0", "red");
+            // Fill with gradient
+            ctx.fillStyle = "black";
+            ctx.fillText(msgStr, 110, 133);
+
+
+        } catch (e) {
+
+        }
+    }
+
+
+
+
+</script>
+
+
+@*<script>
+        var Gobal_Qr = '';
+        var Gobal_OkOrderStrs = '';
+        window.Dropzone.options.qrUpload = {
+            paramName: "file",
+            thumbnailWidth: "350",
+            thumbnailHeight: "630",
+            init: function () {
+                //上传文件时触发的事件
+                this.on("addedfile", function (file) {
+                    delPic();
+                    //  $('.dz-image').last().find('img').attr({ width: '100%', height: '100%' });
+                    // Gobal_QrPath = file.name;//全局名字
+                    //浏览器控制台输出js
+                    // console.log("File " + file.name + "uploaded");
+                });
+                //上传文件成功时触发的事件
+                this.on("success", function (file, data) {
+                    $('.dz-message').hide();
+
+                    Gobal_Qr = data;//全局名字
+                    //  console.log("长传成功: " + file.name);
+                    console.log("返回数据 " + data);
+                    // $("#qrContent").html('现在北京时间：' + new Date().toLocaleString() + ' <span style="color:red"> *解析结果:<span> ' + Gobal_Qr);
+                });
+
+            }
+        };
+
+        function delPic() {
+            // $("#qrContent").html('');
+            $('.dz-image-preview').remove();
+            $('.dz-message').show();
+        }
+
+        //拉取银行卡
+        $(document).on("click", "#getBankCard", function () {
+            try {
+                var bankType = $('#sltBankKind').val();
+                hub.server.getBankCard(bankType).done(function (result) {
+                    try {
+                        //alert(result);
+                        var data = $.parseJSON(result);
+                        var tmpStr = '<div style="background-image:url(/images/bank.png);background-size:cover ;width:300px;height:185px">' +
+                            '<span style="display:block; color:white;font-size:1.3em;font-weight:600;padding:3px 30px 10px 20px">' + data.maPwd + ' </span>' +
+                            '<span style="display:block; color:green;font-size:1.6em;font-weight:800;padding:63px 30px 10px 50px">' + data.maUid + '</span>' +
+                            '<span style="display:block; color:red;font-size:1.6em;font-weight:800;padding:3px 30px 10px 80px">' + data.maName + '</span>' +
+                            '</div>'
+
+                        $("#lastList").prepend("<li data-name=" + data.maName + " data-bank=" + data.maPwd + " data-bankno=" + data.maUid + ">" + tmpStr + "</li>");
+
+                    } catch (e) {
+                        alert(result);
+                    }
+
+
+
+                })
+            } catch (e) {
+                xtip.alert('抱歉，连接丢失或者异常，请刷新本页面！');
+            }
+
+        })
+        //搜索银行卡
+        $(document).on("click", "#searchBankCard", function () {
+            try {
+                var bankInfo = $('#searchInfo').val();
+                hub.server.searchBankCard(bankInfo).done(function (result) {
+                    try {
+                        //alert(result);
+                        var data = $.parseJSON(result);
+                        var tmpStr = '<div style="background-image:url(/images/bank.png);background-size:cover ;width:300px;height:185px">' +
+                            '<span style="display:block; color:white;font-size:1.3em;font-weight:600;padding:3px 30px 10px 20px">' + data.maPwd + ' </span>' +
+                            '<span style="display:block; color:green;font-size:1.6em;font-weight:800;padding:63px 30px 10px 50px">' + data.maUid + '</span>' +
+                            '<span style="display:block; color:red;font-size:1.6em;font-weight:800;padding:3px 30px 10px 80px">' + data.maName + '</span>' +
+                            '</div>'
+
+                        $("#lastList").prepend("<li data-name=" + data.maName + " data-bank=" + data.maPwd + " data-bankno=" + data.maUid + ">" + tmpStr + "</li>");
+
+                    } catch (e) {
+                        alert(result);
+                    }
+
+
+
+                })
+            } catch (e) {
+                xtip.alert('抱歉，连接丢失或者异常，请刷新本页面！');
+            }
+
+        })
+
+
+        //检查时间是否合法
+        function IsValidDate(DateStr) {
+            var sDate = DateStr.replace(/(^\s+|\s+$)/g, '');//去两边空格;
+            if (sDate == '') {
+                return true;
+            }
+        }
+        //提交订单
+        $(document).on("click", "#okPaySend", function () {
+
+            var okImgUrl = Gobal_Qr;
+            var okBankInfo = $('#bankSltInfo').html();
+            var okPayMoney = $('#okPayQrNum').val();
+            hub.server.shopWorkerSendPayBillInfo(okImgUrl, okBankInfo, okPayMoney).done(function (result) {
+                //window.Android.showToast('点击返回：' + okResult);
+                if (result == 'ok') {
+                    alert("提交成功，恭 喜喜 ！");
+
+                    delPic();
+                    $("#qrContent").html('<span style="color:orangered">解析结果:待解析</span>');
+                    $('#okPayQrNum').val('');
+
+
+
+                } else {
+                    alert("提交失败,失败原因:" + result);
+                }
+
+            }).fail(function (err) {
+                alert('错误：' + err);
+            });
+
+        })
+
+        function getQR(needQrStr, qrStr) {
+            $("#QRcodediv").empty().qrcode({
+                width: 300,
+                height: 300,
+                text: needQrStr,//data.qrcode,
+                type: qrStr,
+                content: '*请勿重复扫码，不到账不退款',
+                imgWidth: 120,
+                imgHeight: 120
+            });
+            $("#QRcodediv").show();
+            $('#nowQrcodeUrl').hide();
+        }
+
+
+
+        function getNeedQrcode(kindQr) {
+            var hiDate = { OrderType: kindQr };
+            $.ajax({
+                url: "/api/payByWorker",
+                type: "post",
+                data: hiDate,
+                cache: false,
+                success: function (data) {
+                    // clearPoints();
+                    // $('#canvas').attr('style', 'position:absolute');
+
+                    var dataOK = $.parseJSON(data);
+                    // alert(dataOK.codeState);
+                    if (dataOK.codeState != 'ok') {
+
+                        $('#nowQrcodeUrl').attr('src', ' /images/qrcodeBank.jpg');
+                        $("#QRcodediv").hide();
+                        $('#nowQrcodeUrl').show();
+                        alert(dataOK.codeState);
+
+                        return;
+                    }
+                    // $('#okPayQrNum').val(dataOK.OrderRemark.substr(dataOK.OrderRemark.length - 6));
+                    getQR(dataOK.OrderUrl, dataOK.OrderRemark);
+
+                    // alert(dataOK.OrderUrl);
+                    // $('#nowQrcodeUrl').attr('src', 'http://qr.liantu.com/api.php?&bg=ffffff&fg=cc0000&text=' + dataOK.OrderUrl);
+                    //CVString('sury001');
+
+                    // $("#content").empty();
+                    //  $("#content").append(data);
+                    //点击事件
+                    //$("#first").click();
+
+
+                }
+            });
+
+        }
+
+        $(function () {
+
+            $(document).on("click", "#lastList li", function () {
+
+                $(this).siblings('li').removeClass('optli');  // 删除其他li元素的样式
+
+                $(this).addClass('optli');                            // 添加当前元素的样式
+                handleScrollTop();
+                // 移动到顶部
+                var cur_li = $('.optli');
+                var first_li = $('#lastList li').eq(0);
+                first_li.before(cur_li);
+
+                var t = cur_li.attr("data-name");
+                var t1 = cur_li.attr("data-bankno");
+                var t2 = cur_li.attr("data-bank");
+                $('#bankSltInfo').html('' + t + ' ' + t1 + ' ' + t2)
+
+
+
+            });
+
+        });
+
+        //更新Worker今日信息
+        setInterval(function () {
+
+            try {
+
+                hub.server.shopWorkerTodayInfo().done(function (result) {
+
+                    //  alert(result);
+                    var data = $.parseJSON(result);
+                    // alert(data.malists[0]);
+                    //$("#lastList").empty();
+                    //for (var i = 0; i < data.malists.length; i++) {
+                    //    $("#lastList").append("<li>" + data.malists[i] + "</li>");
+                    //}
+
+                    $("#totalBill").html('￥ ' + data.totalBill);
+
+                    $("#totalAlipay").html('￥ ' + data.alipay);
+                    $("#totalWechat").html('￥ ' + data.wechat);
+                    $("#totalHuabei").html('￥ ' + data.huabei);
+                    $("#totalJuhe").html('￥ ' + data.juhe);
+
+                })
+            } catch (e) {
+                xtip.alert('抱歉，连接丢失或者异常，请刷新本页面！');
+            }
+
+
+
+        }, 15000);
+
+        function handleScrollTop() {
+            // scrollTo(0, 0);
+            document.documentElement.scrollTop = document.body.scrollTop = 0;
+        }
+
+        //清理画布
+        function clearPoints() {
+            var canvas = $("#canvas");
+            if (canvas != null) {
+                try {
+                    var ctx = canvas[0].getContext("2d");
+                    ctx.clearRect(0, 0, canvas.width(), canvas.height());
+
+                } catch (e) {
+
+                }
+
+            }
+        }
+        function CVString(msgStr)//画出文字
+        {
+            try {
+                /* var canvas = $("#canvas");
+                 var context = canvas[0].getContext("2d");
+                 context.font = "20px Georgia"; //设置样式
+                 context.fillStyle = "blue";
+                 context.fillText(msgStr, 120, 160);
+          */
+                var c = document.getElementById("canvas");
+                var ctx = c.getContext("2d");
+                //ctx.fillRect(110,110,100,30);
+
+
+                ctx.font = "23px 黑体";
+                // Create gradient
+                // var gradient = ctx.createLinearGradient(0, 0, c.width, 0);
+                // gradient.addColorStop("0", "magenta");
+                // gradient.addColorStop("0.5", "blue");
+                // gradient.addColorStop("1.0", "red");
+                // Fill with gradient
+                ctx.fillStyle = "black";
+                ctx.fillText(msgStr, 110, 133);
+
+
+            } catch (e) {
+
+            }
+        }
+
+
+
+
+    </script>*@

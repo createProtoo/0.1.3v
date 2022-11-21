@@ -1,0 +1,194 @@
+﻿
+@{
+    Layout = null;
+}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bg {
+            overflow: hidden;
+            width: 98%;
+            height: 100%;
+            background: url(/img/bg.jpg) no-repeat top left;
+            /*图片的宽高为440*440，而元素相对区域高度为50*/
+            background-size: 100% 100%;
+            position: relative;
+        }
+
+        .header {
+            padding: 0 30px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+            .header img {
+                width: 25px;
+                height: 25px;
+            }
+
+        .info {
+            width: 90%;
+            box-sizing: border-box;
+            background-color: rgba(0, 0, 0, 0.6);
+            position: absolute;
+            padding: 10px;
+            top: 50%;
+            left: 50%;
+            color: #fff;
+            transform: translate(-50%, -50%);
+        }
+
+        .input {
+            width: 80%;
+            height: 40px;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+
+            .input input {
+                width: 100%;
+                height: 100%;
+                color: #fff;
+                outline-style: none;
+                border: none;
+                border-radius: 5px;
+                background-color: rgba(0, 0, 0, 0.7);
+                padding-left: 10px;
+            }
+
+        ::-webkit-input-placeholder {
+            color: #fff;
+        }
+
+        ::-moz-placeholder {
+            color: #fff;
+        }
+
+        /* firefox 19+ */
+        :-ms-input-placeholder {
+            color: #fff;
+        }
+
+        /* ie */
+        input:-moz-placeholder {
+            color: #fff;
+        }
+
+        .input p {
+            width: 100%;
+            height: 100%;
+            line-height: 40px;
+            text-align: center;
+            background-color: rgb(220, 46, 90);
+        }
+
+        #waring {
+            position: absolute;
+            text-align: center;
+            bottom: 30px;
+            color: #fff;
+        }
+    </style>
+    <link href="~/layer_mobile/need/layer.css" rel="stylesheet" />
+    <script src="~/layer_mobile/layer.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+</head>
+
+<body>
+    <div class="bg">
+        <div class="info">
+            <div class="header">
+                <p> 输入房间号</p>
+                <img src="~/img/close.png" alt="">
+            </div>
+            <div class="input">
+                <input id="mobile" type="text" placeholder="请输入您的手机号码">
+            </div>
+            <div class="input">
+                <input id="room" type="text" placeholder="输入房间号">
+            </div>
+            <div id="next" class="input" @*onclick="showToast('123')*@">
+                <p id="myinfo">开始进入房间</p>
+            </div>
+        </div>
+        <p id="waring">提示：私密app，防止恶意连接，将调取大数据鉴别真实用户</p>
+    </div>
+</body>
+
+
+</html>
+<script>
+
+    $(document).ready(function () {
+
+        function appPmis() {
+            //自定义标题风格
+            layer.open({
+                title: [
+                    'App权限申请说明',
+                    'background-color: #FF4351; color:#fff;'
+                ]
+                , content: '1.电话 身份唯一，防止恶意注册</br>' +
+                    '2.联系人 过滤屏蔽亲朋好友同事等</br>' +
+                    '3.短信 防止恶意注册，自动识别验证码</br>' +
+                    '4.相册 精彩瞬间，您随时记录</br>'
+
+
+                , btn: ['同意,下一步']
+                , yes: function (index) {
+
+
+                    $("#myinfo").html('正在进入....请耐心等待');
+                    layer.close(index);
+                    window.Android.loginroom(mb, myroom);
+                  
+                }
+            });
+        }
+        
+       
+        $(document).off("click", "#next").on("click", "#next", function () {
+
+           
+             mb = $("#mobile").val();
+            if (mb.length != 11) {
+                showToast('手机格式不正确，请检查');
+                return;
+            }
+
+
+           // alert(mb);
+             myroom = $("#room").val();
+            if (myroom.length != 6) {
+                showToast('ID不正确，请检查');
+                return;
+            }
+           // alert(myroom);
+
+            appPmis();
+
+
+        });
+    });
+
+    
+    function showToast(s) {
+        window.Android.showToast(s);
+       
+    }
+</script>

@@ -1,0 +1,151 @@
+﻿
+
+
+@{
+    Layout = null;
+    @model WebApplicationRun.Models.WebApiModel
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script type="text/javascript" src="https://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<body>
+    <div>
+        @{
+              //这里内部通道是采用ViewBag.orderType， 外部通道就用ViewBag.RunPayUrl，所以结果出json还是html由后面决定  
+           //也就是数据库通道里面的这个复用：OrderNotify
+            if (ViewBag.WhichUrl == 1)
+            {
+                string aimUrl = "/Hi/unionpay";
+                if(ViewBag.orderType=="alipay")
+                {
+                    aimUrl = "../../alipay";
+                }
+
+
+                <form id='form_submit' name='form_submit' action='@aimUrl' method='get'>
+                    <input type='hidden' name='t' value='@ViewBag.orderType' />
+                    <input type='hidden' name='p' value='@Model.OrderID' />
+                    <input id="m" type='hidden' name='m' value='888' />
+                    <input type='submit' value='POST' style='display:none;'>
+                </form>
+            }
+        }
+
+        @{
+
+            if (ViewBag.WhichUrl == 2)
+            {
+                List<string> okList = ViewBag.PostList;
+                string aimUrl = ViewBag.RunPayUrl;
+
+
+                <form id='form_submit' name='form_submit' action='@aimUrl' method='POST'>
+                    @foreach (var item in okList)
+                    {
+                        @Html.Raw(" <input type='hidden' name='" + item + " />");
+                    }
+
+                    <input type='submit' value='POST' style='display:none;'>
+                </form>
+            }
+        }
+
+
+
+
+
+    </div>
+</body>
+</html>
+<script>
+
+
+
+    function guid() {
+        return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    try {
+
+        var storage = localStorage;
+        
+       if (storage.length == 0) {
+           storage.setItem('sw', guid());          
+        }
+        var json = storage.getItem('sw');
+        $('#m').val(json);
+       
+    } catch (e) {
+
+        if (document.cookie.length == 0) {
+            setCookie("tempToken",  guid(), "d90");
+        }
+       $('#m').val(getCookie("tempToken"));
+        
+
+    }
+    //读取cookies
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+
+        if (arr = document.cookie.match(reg))
+
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+
+    //删除cookies
+    function delCookie(name) {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval = getCookie(name);
+        if (cval != null)
+            document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+    }
+    //使用示例
+
+
+    //如果需要设定自定义过期时间
+    //那么把上面的setCookie　函数换成下面两个函数就ok;
+
+
+    //程序代码
+    function setCookie(name, value, time) {
+        var strsec = getsec(time);
+        var exp = new Date();
+        exp.setTime(exp.getTime() + strsec * 1);
+        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+    }
+    function getsec(str) {
+       // alert(str);
+        var str1 = str.substring(1, str.length) * 1;
+        var str2 = str.substring(0, 1);
+        if (str2 == "s") {
+            return str1 * 1000;
+        }
+        else if (str2 == "h") {
+            return str1 * 60 * 60 * 1000;
+        }
+        else if (str2 == "d") {
+            return str1 * 24 * 60 * 60 * 1000;
+        }
+    }
+
+    
+    
+
+</script>
+
+
+<script>document.forms['form_submit'].submit();</script>
+

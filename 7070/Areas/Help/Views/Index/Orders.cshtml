@@ -1,0 +1,169 @@
+﻿
+@{
+    ViewBag.Title = "Orders";
+    Layout = null;
+    //Layout = "~/Areas/Help/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Areas/Help/assets/css/My.css" rel="stylesheet" />
+<link href="~/Areas/Help/assets/js/plugin/switch/honeySwitch.css" rel="stylesheet" />
+
+<div class="page-header">
+    <h4 id="orderTitle" class="page-title">全部订单</h4> <span class="switch-onsw" themecolor="gold" id="directory" style="border-color: gold; box-shadow: gold 0px 0px 0px 16px inset; background-color: gold;"><span class="slidersw"></span></span>
+    <h2 class="text-danger page-title myMargin">已付 ￥ <span id="payOKLbl"></span></h2>
+    @if (ViewBag.Role.IndexOf("SuperAdmin") > -1 || ViewBag.Role.IndexOf("ShopManager") > -1)
+    {
+        <h3 class="myDark  myMargin">手续费￥ <span id="payHandbl"></span></h3>
+    }
+    
+    @if (ViewBag.Role.IndexOf("SuperAdmin") > -1 || ViewBag.Role.IndexOf("RunManager") > -1)
+    {
+        <h3 class="text-muted page-title myMargin">通道费￥ <span id="payRunLbl"></span></h3>
+    }
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card" style="width:105%;margin-left:-3%">
+            <div class="card-header">
+
+                <div style="display:inline">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>开始时间</label>
+                                <div class="input-group">
+                                    <input name="datetime" class="form-control" id="datetimepicker" type="text">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>截止时间</label>
+                                <div class="input-group">
+                                    <input name="datepicker" class="form-control" id="datetimepicker2" type="text">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-calendar-check"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="text-align:center;padding-top:37px">
+                            @*<label class="form-check-label" style="margin-top: 10px;">
+                                    <input class="form-check-input" id="qrH5" type="checkbox" value="qrH5">
+                                    <span style="font-size:2em" class="form-check-sign">按支付时间</span>
+                                </label>*@
+
+                            @*<button id="btnSearch" onclick="javascript:testMsg()" class="btn btn-success" style="margin:0px 30px">
+                                <span class="btn-label">
+                                    <i class="fa fa-check"></i>
+                                </span>
+                                查询
+                            </button>*@
+
+                            <button id="ExcelForOrders" class="btn btn-danger">
+                                <span class="btn-label">
+                                    <i class="fa fa-heart"></i>
+                                </span>
+                                导出Excel
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatables" class="display table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>单号</th>
+                                <th>类型</th>
+                                <th>商号</th>
+                                <th>商户</th>
+                                <th>金额</th>
+                                <th>状态</th>
+                                <th>创建</th>
+                                <th>别名</th>
+                                <th>回头率</th>
+                                <th>实收</th>
+                                <th>号码</th>
+                                <th>通道</th>
+                               
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/Areas/Help/assets/js/plugin/datepicker/jquery.datetimepicker.js"></script>
+
+<script src="~/Areas/Help/assets/js/mm/Orders.js"></script>
+<!-- Moment JS -->
+<script src="~/Areas/help/assets/js/plugin/moment/moment.min.js"></script>
+<script src="~/Areas/Help/assets/js/plugin/switch/honeySwitch.js"></script>
+<script src="~/Areas/Help/assets/js/mm/excel.js"></script>
+<script>
+    //switch按钮
+    $(function () {
+
+        switchEvent("#directory", function () {
+            autoReload = 1;
+            alert(Gobal_Str);
+            orderSearch = 0;//改为0
+            $('#datetimepicker').val(getTime());
+
+            notifyMsg('flaticon-alarm-1', '提示', '打开自动刷新成功!', 'info');
+        }, function () {
+
+            autoReload = 0;
+            notifyMsg('flaticon-cross', '提示', '关闭自动刷新成功!', 'info');
+        });
+    });
+
+
+
+    $('#datetimepicker2').datetimepicker({
+
+        onSelectTime: function (dp, $input) {
+           // alert('aaa');
+            autoReload = 0;
+            honeySwitch.showOff("#directory")
+            $('#datetimepicker2').datetimepicker('hide')
+            orderSearch = 1;//改为1
+            loadOrdersData();
+            
+            notifyMsg('flaticon-cross', '提示', '启用日期范围查询后,自动刷新已经停止....', 'info')
+        }
+    });
+
+
+     function getTime(){
+       var currDate = new Date();
+       var d = new Date();
+       var YMDHMS = d.getFullYear() + "/" +(d.getMonth()+1) + "/" + d.getDate() + " " + "00" + ":" + "00" ; 
+         return YMDHMS;
+ }
+
+</script>
+

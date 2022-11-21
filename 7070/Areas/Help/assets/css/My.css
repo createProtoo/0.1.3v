@@ -1,0 +1,75 @@
+﻿.important{
+    background-color:rebeccapurple;
+}
+
+
+
+table.dataTable tbody tr:hover {
+    background-color:#d1f3d9;
+}
+
+.myMargin {
+    margin: 0px 20px;
+}
+
+.myDark{
+    color:darkgrey;
+}
+
+
+.myPayKindImg{
+    height:23px;
+    width:23px;
+}
+
+
+a.buttons-collection {
+    margin-left: 1em;
+}
+
+
+/** 展开按钮 **/
+td.details-control {
+    background: url('/images/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+
+/** 收起按钮 **/
+tr.shown td.details-control {
+    background: url('/images/details_close.png') no-repeat center center;
+}
+
+.input-group {
+    margin: 15px auto;
+    box-sizing: border-box;
+}
+
+.input-group > label {
+        font-size: 1rem;
+        line-height: 28px;
+      
+        float: left;
+        width: 35%;
+        text-align: right;
+        padding: 3px 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 5px;
+    }
+
+.myOrangered {
+    color: orangered
+}
+
+.myGreen {
+    color: green
+}
+
+.hideDiv{
+    display:none;
+}
+
+.DivCenter{
+    text-align:center;
+}

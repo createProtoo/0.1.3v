@@ -1,0 +1,107 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Messages</title>
+    <script src="~/Areas/help/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script src="~/Areas/help/assets/js/core/jquery.3.2.1.min.js"></script>
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="~/Areas/help/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Areas/help/assets/css/azzara.min.css">
+    <link href="~/Areas/Help/assets/js/plugin/datepicker/jquery.datetimepicker.css" rel="stylesheet" />
+    <link href="~/Scripts/xtiper/css/xtiper.css" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="~/Areas/help/assets/css/demo.css">
+</head>
+<body>
+    <div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" style="width:105%;margin-left:-3%">
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="shop-datatables" class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+
+                                        <th>时间</th>
+                                        <th>号码</th>
+                                        <th>内容</th>
+                                        <th>类型</th>                                       
+
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+<script>
+   var  whichOderCmd='@ViewBag.ID';
+</script>
+<!--   Core JS Files   -->
+<script src="~/Areas/help/assets/js/core/popper.min.js"></script>
+<script src="~/Areas/help/assets/js/core/bootstrap.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="~/Areas/help/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+<script src="~/Areas/help/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+
+<!-- jQuery Scrollbar -->
+<script src="~/Areas/help/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+<!-- Moment JS -->
+<script src="~/Areas/help/assets/js/plugin/moment/moment.min.js"></script>
+
+<!-- Chart JS -->
+<script src="~/Areas/help/assets/js/plugin/chart.js/chart.min.js"></script>
+
+<!-- jQuery Sparkline -->
+<script src="~/Areas/help/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+<!-- Chart Circle -->
+<script src="~/Areas/help/assets/js/plugin/chart-circle/circles.min.js"></script>
+
+<!-- Datatables -->
+<script src="~/Areas/help/assets/js/plugin/datatables/datatables.min.js"></script>
+
+<!-- Bootstrap Notify -->
+<script src="~/Areas/help/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+<!-- Bootstrap Toggle -->
+<script src="~/Areas/help/assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+
+
+
+<script src="~/Scripts/xtiper/js/xtiper.min.js"></script>
+
+<script src="~/Areas/Li/assets/js/mm/msg.js"></script>
+<script>
+    WebFont.load({
+        google: { "families": ["Open+Sans:300,400,600,700"] },
+        custom: { "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands"], urls: ['/Areas/help/assets/css/fonts.css'] },
+        active: function () {
+            sessionStorage.fonts = true;
+        }
+    });
+</script>
